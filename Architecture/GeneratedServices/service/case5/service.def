@@ -1,0 +1,4 @@
+autogen definitions service;
+name = case5;
+source = "std::cout << \" noInputs_noOutput\" << std::endl;";
+output = { type = void; };

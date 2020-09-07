@@ -1,0 +1,122 @@
+/*
+* FileName: readme.txt
+* Description: Information about Atlas-IoT_Thing (architecture to turn your thing into Atlas thing) and how to run
+*/
+
+*****Compile and Run Atlas-IoT for the thing*************
+Step 1: Prepare your linux environment by running the following commands through termainal
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get install gcc-6 g++-6 build-essential
+//usually install the latest gcc and g++
+//you can change the default/installed gcc and g++ using the following:
+sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 50
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 50
+
+sudo apt-get install doxygen
+sudo apt-get install cmake cmake-curses-gui
+sudo apt-get install libboost-all-dev
+sudo apt-get install curl libcurl4-openssl-dev
+sudo apt-get install autogen
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Step 2:Install cppMicroservices library by running the cMServices.sh shell script under Atlas-IoT_Thing/Main/
+////// make sure you delete the "temp" folder in this directory before you start
+chmod +x cMServices.sh
+./cMServices.sh
+
+//////if there is a problem with the githubRepository, you can find CMicroservices Library (the zip version) under main/InstallMicroservices/
+unzip to folder named CMircoServices
+cmake CMircoServices/
+sudo make
+sudo make install
+LD_LIBRARY_PATH=/usr/local/include
+export LD_LIBRARY_PATH
+sudo ldconfig
+
+
+//the new version installs the library in /usr/local/include/cppmicroservices4/ rather than /usr/local/include/
+
+sudo mv /usr/local/include/cppmicroservices4/ Desktop/
+sudo mv Desktop/cppmicroservices4/cppmicroservices/ /usr/local/include/
+
+
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+WiringPi
+
+http://wiringpi.com/download-and-install/
+
+the pins:
+https://solarianprogrammer.com/2018/12/23/raspberry-pi-cpp-control-led/
+
+
+-lwiringPi -lm -lrt -lcrypt: are added to the make file of the bundle generator
+The library under Atlas-IoT_Thing/lib, need to unzip, then ./build
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Step 3: Navigate to the directory of Atlas-IoT_thing (use cd command) and Compile as follows:
+cmake Main/
+make
+
+Step 4: Run Atlas using the following command
+./Atlas
+
+
+****How Atlas-IoT_Thing directory is organized**********
+Main/ : holds the entry point to compile Atlas-IoT_Thing  (readme file, cMServices shell script, cMakeLists.txt)
+Architecture/ : holds the 
+		- Communication Manager       : holds the different communication languages supported (CoAP/MQTT/Rest) and the Unix-sockets
+		- IoTDDL Parser               : parses the different sections and sub-sections of the IoT-DDL
+		- Identity Parser             : builds the identity/language/entity json tweets of the thing
+		- API-Generator               : generates bundles to the offered services, handle the service call and generate API to the service 
+		- Knowledge Tweeting Manager  : builds the service/relationship json tweets, build tree of services-relationships, find match of the unbounded services
+		- Object Engine               : build LwM2M formated objects to each section/subsection of the IoT-DDL and holds the security procedures, and handles device management from OMA-DM server
+		- Attachment Engine           : handles the different attachments of the thing (the on/off Atlas protocol translator)
+		- System Function             : set of common system functions that can be called besides the generated bundles for thing's services
+
+lib/ : holds the different libraries utilized in the project
+		- RapidJSON : JSON parser/generator for C++ with both SAX/DOM style API (http://rapidjson.org/)
+		- TinyXML2  : C++ XML parser under the ZLib license
+		- PahoMQTT  : Eclipse Paho MQTT C client library
+		- CoAPLib   : C implementation of the lightweight CoAP application-protocol from the noisy atom, under a BSD license
+                - Crypto++  : C++ library of the cryptographic schemes licensed under the Boost Software License 1.0
+                - OMALib    : Eclipse Wakaama (formerly liblwm2m), implementation of the Open Mobile Alliance's LightWeight M2M protocol (LwM2M)
+
+ConfigurationFiles/ : holds the different configuration files (Atlas IoTDDl, file.txt - holds security seed and key, englishGigaWord_IDF_LOG - the IDF of the english words)
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Standard available MQTT broker can be accessed from: mqtt-dashboard.com
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+The standard OMA-DM client we have in the architecture connects to lwm2m online server at coap://leshan.eclipse.org:5683
+and you can view connected clients/objects at http://leshan.eclipse.org/
+
+under the network manager
+				<OMA-DM_IP>leshan.eclipse.org</OMA-DM_IP>
+				<OMA-DM_Port>5683</OMA-DM_Port>
+
+
+when you open the url, find the connected thing, click on it then click read ... then read/write/delete
+..... also Standard available OMA-DM LwM2M device management server can be downloaded from: github.com/eclipse/wakaama or leshan.eclipse.org
+
+..... to create new Atlas object:
+1- create a new .c file with the appropriate name under /lib/OMALib/core/ directory
+2- change the name/id/attributes/functions inside the new .c file
+3- in wakaama.cmake file in /lib/OMALib/core/ directory add your .c file in the source list
+4- in objectHandler, create the corresponding functions as we did for Atlas thing descriptive metadata
+5- call them in Object_Handler.cpp under the architecture.
+
+
+If you face a memoryfree problem registering/building OMA objects, this is a problem with reading the value from the xml IoTDDL and strcpy

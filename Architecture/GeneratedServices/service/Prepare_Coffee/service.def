@@ -1,0 +1,6 @@
+autogen definitions service;
+name = Prepare_Coffee;
+source = "std::cout << \" Hello\" << std::endl;";
+source = "Success = hour + 5;";
+inputs = { name = hour; type = "int"; };
+output = { name = Success; type = "int"; };

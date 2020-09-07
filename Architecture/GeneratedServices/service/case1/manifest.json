@@ -1,0 +1,9 @@
+
+{
+	"bundle.symbolic_name": "case1",
+	"bundle.activator":     true,
+	"bundle.name"         : "Service case1",
+	"bundle.description"  : "This bundle is service type"
+}
+
+

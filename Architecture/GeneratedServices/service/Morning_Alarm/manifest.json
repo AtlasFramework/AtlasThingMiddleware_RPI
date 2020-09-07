@@ -1,0 +1,9 @@
+
+{
+	"bundle.symbolic_name": "Morning_Alarm",
+	"bundle.activator":     true,
+	"bundle.name"         : "Service Morning_Alarm",
+	"bundle.description"  : "This bundle is service type"
+}
+
+

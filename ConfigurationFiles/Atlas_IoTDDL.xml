@@ -1,0 +1,282 @@
+<Atlas_IoTDDL>
+	<Atlas_Thing>
+		<Descriptive_Metadata>
+			<Thing_Vendor>RaspberryPI</Thing_Vendor>
+			<Thing_Owner>CISE</Thing_Owner>
+			<Thing_ReleaseDate>July-12th</Thing_ReleaseDate>
+			<Thing_Type>Powerful Thing</Thing_Type>
+			<Thing_Name>RPI</Thing_Name>
+			<Thing_Model>B+</Thing_Model>
+			<Thing_ShortDescription>Sensor platform</Thing_ShortDescription>
+			<Thing_OperatingSystem>Raspbian</Thing_OperatingSystem>
+			<Thing_ATID>AtlasThing54370</Thing_ATID>
+			<Thing_SSID>SpaceID54333</Thing_SSID>
+			<Space_Coordinates></Space_Coordinates>
+			<Space_Description>Kitchen</Space_Description>
+		</Descriptive_Metadata>
+
+		<Structural_Metadata>
+			<Number_Entities>1</Number_Entities>
+			<Number_Builtin_Hardware>0</Number_Builtin_Hardware>
+			<Number_Connected_Hardware>0</Number_Connected_Hardware>
+			<Number_Builtin_Software>1</Number_Builtin_Software>
+			<Number_Remote_Software>0</Number_Remote_Software>
+		</Structural_Metadata>
+		
+		<Administrative_Metadata>
+			<Network_Manager>
+				<Type>Built-In</Type>
+				<Module>WiFi</Module>
+				<Communication_Protocol>REST</Communication_Protocol>
+				<Network_Name>AtlasGroupWifi</Network_Name>
+				<Network_Passcode></Network_Passcode>
+				<Broadcast>
+					<IP>232.1.1.1</IP>
+					<Port>1235</Port>
+				</Broadcast>
+				<InterOperableCommunication>
+					<BrokerVendor>HiveMQ MQTT broker</BrokerVendor>
+					<BrokerURL>broker.hivemq.com:1883</BrokerURL>
+					<BrokerDashboard>mqtt-dashboard.com</BrokerDashboard>
+				</InterOperableCommunication>
+				<Topic_Root>/Atlas</Topic_Root>
+				<Topic_Network_MQTTClient>/Network/MQTT_Client</Topic_Network_MQTTClient>
+				<Topic_Network_PrivateBroker>/Network/Private_Broker</Topic_Network_PrivateBroker>
+				<Topic_Multicast_ThingIdentity>/Multicast/Tweet_ThingIdentity</Topic_Multicast_ThingIdentity>
+				<Topic_Multicast_EntityIdentity>/Multicast/Tweet_EntityIdentity</Topic_Multicast_EntityIdentity>
+				<Topic_Multicast_API>/Multicast/API</Topic_Multicast_API>
+				<Topic_Unicast>/Unicast/Interaction</Topic_Unicast>
+				<OMA_DM>
+					<AccessName>Local OMA_DM Server</AccessName>
+					<IP>localhost</IP>
+					<Port>5683</Port>
+				</OMA_DM>
+			</Network_Manager>
+			<Memory_Manager>
+				<Store_Format>Binary</Store_Format>
+				<MemoryUnit_Application>RAM</MemoryUnit_Application>
+				<MemoryUnit_Knowledge>RAM</MemoryUnit_Knowledge>
+			</Memory_Manager>
+		</Administrative_Metadata>
+
+
+
+
+		<Thing_Attachment>
+			<Attachments_Number>1</Attachments_Number>
+			<Attachment_1>
+				<Type>Entity</Type>
+				<Name>cloud-dashboard</Name>
+				<Description>Dashboard for an on-thing DVR device</Description>
+				<Model>Kodi</Model>
+				<Version>17.1</Version>
+				<Service_Access_Type>http</Service_Access_Type> 
+				<Service_Access_URL>on-thing</Service_Access_URL> 
+				<Service_Access_PORT>8080</Service_Access_PORT> 
+				<Availability>Enabled</Availability>
+			</Attachment_1>
+			<Log_Server>
+				<Attachment_Type>Thing</Attachment_Type>	
+				<Description>Log HTTP1.1 server for monitoring</Description>
+				<URI>192.168.0.4</URI>
+				<Port>8080</Port>
+				<HTTP_RequestType>PUT</HTTP_RequestType>
+				<Login_Name>NULL</Login_Name>
+				<Login_Passcode>NULL</Login_Passcode>
+				<API_Key>NULL</API_Key>
+				<MessageFormat>Plain</MessageFormat>
+				<Backend_Technology>NodeJS</Backend_Technology> 
+			</Log_Server>
+			<MQTT_Broker>
+				<Attachment_Type>Thing</Attachment_Type>
+				<Type>on-thing</Type>
+				<Description>mqtt broker service</Description>
+				<URL>~/Desktop/Atlas-Thing_Architecture/OnThingService/Atlas-Thing_Broker/Broker.sh</URL> 
+				<Availability>Disabled</Availability>
+			</MQTT_Broker>
+			<Protocol_Translator>
+				<Attachment_Type>Thing</Attachment_Type>
+				<Type>on-thing</Type>
+				<Description>protocol translator service</Description>
+				<Translator_URL>192.168.0.4</Translator_URL> 
+				<Translator_PORT>57577</Translator_PORT> 
+				<Availability>Enabled</Availability>
+			</Protocol_Translator>
+		</Thing_Attachment>
+	</Atlas_Thing>
+	<Atlas_Entity_1>
+		<Descriptive_Metadata>
+			<Entity_Name>Bosch</Entity_Name>
+			<Entity_Id>1</Entity_Id>
+			<Entity_Category>Hybrid</Entity_Category>
+			<Entity_Owner>Bosch</Entity_Owner>
+			<Entity_Vendor>Bosch</Entity_Vendor>
+			<Entity_Type>Built-in</Entity_Type>
+			<Entity_Description>Prepare coffee in the morning</Entity_Description>
+		</Descriptive_Metadata>
+		<Resource_Service>
+			<Services_Number>6</Services_Number>
+			<Service_1>	
+				<Name>case1</Name>
+				<Type>Report</Type>
+				<AppCategory>Time Alarms</AppCategory>
+				<LongDescription>Trigger Alarm in the morning</LongDescription>	
+				<InputTypes>int</InputTypes>		
+				<InputDescription>hour</InputDescription>
+				<InputRange>[0-23]</InputRange>
+				<OutputTypes>int</OutputTypes>		
+				<OutputDescription>TimeValue</OutputDescription>
+				<OutputRange>[0-200]</OutputRange>
+				<FunctionMap>Recording_Scheduled</FunctionMap>
+				<Formula>
+					<Statement>TimeValue = hour + 3</Statement>
+					<Statement>print_value(TimeValue)</Statement>
+				</Formula>
+				<Keywords>Morning, Alarm</Keywords>
+			</Service_1>
+			<Service_2>	
+				<Name>Prepare_Coffee</Name>
+				<Type>Action</Type>
+				<AppCategory>Eating</AppCategory>
+				<LongDescription>Trigger the connected coffee maker</LongDescription>	
+				<InputTypes>int</InputTypes>		
+				<InputDescription>hour</InputDescription>
+				<InputRange>[0-200]</InputRange>
+				<OutputTypes>int</OutputTypes>		
+				<OutputDescription>Success</OutputDescription>
+				<OutputRange>[0-1]</OutputRange>
+				<FunctionMap>Recording_Scheduled</FunctionMap>
+				<Formula>
+					<Statement>print_string(Hello)</Statement>
+					<Statement>Success = hour + 5</Statement>
+				</Formula>
+				<Keywords>Coffee, key</Keywords>
+			</Service_2>
+
+			<Service_3>	
+				<Name>TestHardware</Name>
+				<Type>Action</Type>
+				<AppCategory>Eating</AppCategory>
+				<LongDescription>Trigger the connected coffee maker</LongDescription>	
+				<InputTypes>int, int</InputTypes>		
+				<InputDescription>minute, second</InputDescription>
+				<InputRange>[0-60], [0-60]</InputRange>
+				<OutputTypes>int</OutputTypes>		
+				<OutputDescription>reportedValue</OutputDescription>
+				<OutputRange>[0-1]</OutputRange>
+				<FunctionMap>Recording_Scheduled</FunctionMap>
+				<Formula>
+					<Statement>DigitalWrite_High(Pin#:17)</Statement>
+					<Statement>Delay(Value:1000)</Statement>
+					<Statement>DigitalWrite_Low(Pin#:17)</Statement>
+					<Statement>DigitalWrite_Blink(Pin#:17, Delay:1000)</Statement>
+					<Statement>reportedValue = DigitalRead(Pin#:17)</Statement>
+					<Statement>reportedValue = AnalogRead(Pin#:12)</Statement>
+					<Statement>AnalogWrite(Pin#:12, Value:10)</Statement>
+
+				</Formula>
+				<Keywords>Coffee, key</Keywords>
+			</Service_3>
+
+
+
+			<Service_4>	
+				<Name>case4</Name>
+				<Type>Report</Type>
+				<AppCategory>Time Alarms</AppCategory>
+				<LongDescription>Trigger Alarm in the morning</LongDescription>	
+				<InputTypes>NULL</InputTypes>		
+				<InputDescription>NULL</InputDescription>
+				<InputRange>NULL</InputRange>
+				<OutputTypes>int</OutputTypes>		
+				<OutputDescription>TimeValue</OutputDescription>
+				<OutputRange>[0-200]</OutputRange>	
+				<Formula>
+					<Statement>print_string(noInputs_noOutput)</Statement>
+				</Formula>
+				<Keywords>Morning, Alarm</Keywords>
+			</Service_4>
+
+			
+			<Service_5>	
+				<Name>case5</Name>
+				<Type>Report</Type>
+				<AppCategory>Time Alarms</AppCategory>
+				<LongDescription>Trigger Alarm in the morning</LongDescription>	
+				<InputTypes>NULL</InputTypes>		
+				<InputDescription>NULL</InputDescription>
+				<InputRange>NULL</InputRange>
+				<OutputTypes>void</OutputTypes>		
+				<Formula>
+					<Statement>print_string(noInputs_noOutput)</Statement>
+				</Formula>
+				<Keywords>Morning, Alarm</Keywords>
+			</Service_5>
+
+
+
+
+			<Service_6>	
+				<Name>case6</Name>
+				<Type>Report</Type>
+				<AppCategory>Time Alarms</AppCategory>
+				<LongDescription>Trigger Alarm in the morning</LongDescription>	
+				<InputTypes>int, int</InputTypes>		
+				<InputDescription>minute, second</InputDescription>
+				<InputRange>[0-60], [0-60]</InputRange>
+				<OutputTypes>int</OutputTypes>		
+				<OutputDescription>reportedValue</OutputDescription>
+				<OutputRange>[0-1]</OutputRange>	
+				<Formula>
+
+					<Statement>reportedValue = minute + second</Statement>
+					<Statement>print_string(noInputs_noOutput)</Statement>
+					<Statement>print_value(reportedValue)</Statement>
+				</Formula>
+				<Keywords>Morning, Alarm</Keywords>
+			</Service_6>
+
+
+
+
+
+				
+
+		</Resource_Service>
+		<Unbounded_Services>
+			<Number>1</Number>
+			<Service_1>
+				<Name>UB1</Name>
+				<Vendor>xvd</Vendor>
+				<Type>sdf</Type>
+				<Keywords>x, y</Keywords>
+				<Match>60</Match>
+			</Service_1>
+	      	</Unbounded_Services>
+		<Social_Relationship>
+			<Number>2</Number>	
+			<Relation_1>
+				<Name>Prepare Morning Coffee</Name>
+				<Type>control</Type>
+				<category>Cooperative</category>
+				<Establisher>Bosch</Establisher>
+				<Relation_Description>Prepare coffee in the morning</Relation_Description>
+				<Inputs>Morning_Alarm,Prepare_Coffee</Inputs>		
+				<InputDescription>Service,Service</InputDescription>
+				<OutputTypes>int</OutputTypes>		
+				<OutputDescription>NULL</OutputDescription>
+			</Relation_1>
+			<Relation_2>
+				<Name>Coffee makers second</Name>
+				<Type>refine</Type>
+				<category>Competitive</category>
+				<Establisher>Bosch</Establisher>
+				<Relation_Description>this is a description for R2</Relation_Description>
+				<Inputs>Morning_Alarm,UB1</Inputs>		
+				<InputDescription>Service,UnboundedService</InputDescription>
+				<OutputTypes>int</OutputTypes>		
+				<OutputDescription>NULL</OutputDescription>
+			</Relation_2>
+		</Social_Relationship>
+	</Atlas_Entity_1>
+</Atlas_IoTDDL>

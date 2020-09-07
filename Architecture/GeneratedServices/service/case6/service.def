@@ -1,0 +1,8 @@
+autogen definitions service;
+name = case6;
+source = "reportedValue = minute + second;";
+source = "std::cout << \" noInputs_noOutput\" << std::endl;";
+source = "std::cout << reportedValue << std::endl;";
+inputs = { name = minute; type = "int"; };
+inputs = { name =  second; type = " int"; };
+output = { name = reportedValue; type = "int"; };

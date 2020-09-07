@@ -1,0 +1,9 @@
+
+{
+	"bundle.symbolic_name": "Prepare_Coffee",
+	"bundle.activator":     true,
+	"bundle.name"         : "Service Prepare_Coffee",
+	"bundle.description"  : "This bundle is service type"
+}
+
+

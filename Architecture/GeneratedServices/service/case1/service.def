@@ -1,0 +1,6 @@
+autogen definitions service;
+name = case1;
+source = "TimeValue = hour + 3;";
+source = "std::cout << TimeValue << std::endl;";
+inputs = { name = hour; type = "int"; };
+output = { name = TimeValue; type = "int"; };

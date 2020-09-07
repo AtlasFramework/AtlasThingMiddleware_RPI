@@ -1,0 +1,15 @@
+
+set(COAPLIB_SOURCES_DIR ${CMAKE_CURRENT_LIST_DIR})
+
+set(COAPLIB_HEADERS
+    ${COAPLIB_SOURCES_DIR}/cantcoap.h
+    ${COAPLIB_SOURCES_DIR}/dbg.h
+    ${COAPLIB_SOURCES_DIR}/nethelper.h
+    ${COAPLIB_SOURCES_DIR}/sysdep.h
+    ${COAPLIB_SOURCES_DIR}/uthash.h)
+
+set(COAPLIB_SOURCES
+    ${COAPLIB_SOURCES_DIR}/cantcoap.cpp
+    ${COAPLIB_SOURCES_DIR}/nethelper.c
+    ${EXT_SOURCES})
+

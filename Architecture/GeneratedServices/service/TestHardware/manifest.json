@@ -1,0 +1,9 @@
+
+{
+	"bundle.symbolic_name": "TestHardware",
+	"bundle.activator":     true,
+	"bundle.name"         : "Service TestHardware",
+	"bundle.description"  : "This bundle is service type"
+}
+
+
