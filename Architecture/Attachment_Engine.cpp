@@ -2,8 +2,6 @@
 * FileName: Attachment_Engine.cpp
 * Description: Generates tweets for the different attachments on both levels (the thing, the entity) 
 * and offers different functions to access such attachments (Atlas thing multi-lang translator, Device manager OMA, web-based Dashboard, NodeJS server).
-*
-* Authors: Ahmed E. Khaled     Date: July 2017
 */
 
 #include "Attachment_Engine.h"
@@ -124,7 +122,7 @@ void WriteToBroker(){
 
     		xRan = rand()%5 + 1; //randomizing the number between 1-10
 	        cout<<"CoAP thing uses off-thing translator to multicast and wait for "<<xRan<<"sec to send new publish"<<endl;
-    		wait(xRan);
+    		//wait(xRan);
     		cout<<"   writing number PDUs received from the broker "<<brokerwrite<<endl;
 		brokerwrite++;
     	}
