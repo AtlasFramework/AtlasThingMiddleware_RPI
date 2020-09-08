@@ -29,7 +29,10 @@ holds the entry point to compile Atlas-IoT_Thing  (readme file, cMServices shell
 [Use the IoT-DDL builder online tool to interactively build an IoT-DDL file for an Atlas thing.](https://atlasframework.github.io/IoT-DDL/DDL_Builder/builder.html)
 
 
-
+<br/>
+<br/>
+<br/>
+<br/>
 
 
 ## Prepare your Atlas smart thing on RaspberryPi through the following steps:
