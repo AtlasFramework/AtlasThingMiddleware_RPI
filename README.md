@@ -50,7 +50,7 @@ holds the entry point to compile Atlas-IoT_Thing  (readme file, cMServices shell
 From Github, download the zip version of the middleware on your RaspberryPi, then unzip the folder.
 
 ### Step3: Install cppMicroservices library
- - unzip the folder named CppMicroServices-development under Atlas-IoT_Thing/lib/ of the middleware
+ - unzip the folder named CppMicroServices-development under Atlas-IoT_Thing/lib/ of the middleware, and keep in the lib directory
  - cmake CppMicroServices-development/
  - sudo make
  - sudo make install
@@ -64,6 +64,7 @@ From Github, download the zip version of the middleware on your RaspberryPi, the
 
 ### Step4: Install WiringPi library 
  - unzip the folder named WiringPi-master under Atlas-IoT_Thing/lib/WiringPi-master/ of the middleware
+ - cd to the WiringPi-master folder
  - ./build
 
 ### Step5: Compile and Build Atlas middleware
