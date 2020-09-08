@@ -50,8 +50,8 @@ holds the entry point to compile Atlas-IoT_Thing  (readme file, cMServices shell
 From Github, download the zip version of the middleware on your RaspberryPi, then unzip the folder.
 
 ### Step3: Install cppMicroservices library
- - unzip the folder named CMircoServices under Atlas-IoT_Thing/lib/CppMicroServices-development/ of the middleware
- - cmake CMircoServices/
+ - unzip the folder named CMircoServices under Atlas-IoT_Thing/lib/ of the middleware
+ - cmake CppMicroServices-development/
  - sudo make
  - sudo make install
  - LD_LIBRARY_PATH=/usr/local/include
