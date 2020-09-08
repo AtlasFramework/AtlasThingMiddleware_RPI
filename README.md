@@ -58,8 +58,8 @@ From Github, download the zip version of the middleware on your RaspberryPi, the
  - export LD_LIBRARY_PATH
  - sudo ldconfig
  - //the new version installs the library in /usr/local/include/cppmicroservices4/ rather than /usr/local/include/
- - sudo mv /usr/local/include/cppmicroservices4/ Desktop/
- - sudo mv Desktop/cppmicroservices4/cppmicroservices/ /usr/local/include/
+ - sudo mv /usr/local/include/cppmicroservices4/ ~/Desktop/
+ - sudo mv ~/Desktop/cppmicroservices4/cppmicroservices/ /usr/local/include/
 
 
 ### Step4: Install WiringPi library 
