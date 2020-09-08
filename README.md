@@ -25,11 +25,11 @@ holds the entry point to compile Atlas-IoT_Thing  (readme file, cMServices shell
                 - Crypto++  : C++ library of the cryptographic schemes licensed under the Boost Software License 1.0
                 - OMALib    : Eclipse Wakaama (formerly liblwm2m), implementation of the Open Mobile Alliance's LightWeight M2M protocol (LwM2M)
 
-### ConfigurationFiles/ : holds the different configuration files (Atlas IoTDDL) 
+### ConfigurationFiles/ : holds the different configuration files (e.g., Atlas IoTDDL) 
 [Use the IoT-DDL builder online tool to interactively build an IoT-DDL file for an Atlas thing.](https://atlasframework.github.io/IoT-DDL/DDL_Builder/builder.html)
 
+there is an initial IoTDDL in this version, if you will use it without replacing it with a new one - make sure to change the thing ID in the file.
 
-<br/>
 <br/>
 <br/>
 <br/>
