@@ -47,10 +47,10 @@ holds the entry point to compile Atlas-IoT_Thing  (readme file, cMServices shell
  - sudo apt-get install autogen
 
 ### Step2: Get the latest version of the middleware:
-From Github, download the zip version of the middleware on your RaspberryPi, then unzip the folder anywhere.
+From Github, download the zip version of the middleware on your RaspberryPi, then unzip the folder.
 
 ### Step3: Install cppMicroservices library
- - unzip to folder named CMircoServices under Atlas-IoT_Thing/lib/CppMicroServices-development/ of the middleware
+ - unzip the folder named CMircoServices under Atlas-IoT_Thing/lib/CppMicroServices-development/ of the middleware
  - cmake CMircoServices/
  - sudo make
  - sudo make install
