@@ -123,10 +123,10 @@ void Knowledge_Tweeting_Manager::parse_ThingServices(){
 }
 
 void Knowledge_Tweeting_Manager::parse_mateServicesTweet(string JSONs){
-        char json[1024];
+        char json[4048];
 	strcpy(json, JSONs.c_str());
 	Document document;  
-	char buffer[500];
+	char buffer[4048];
 	memcpy(buffer, json, sizeof(json));
 	if (document.ParseInsitu(buffer).HasParseError())  return;
 
@@ -283,10 +283,10 @@ void Knowledge_Tweeting_Manager::parse_ThingRelationships(){
 }
 
 void Knowledge_Tweeting_Manager::parse_mateRelationsTweet(string JSONs){
-        char json[1024];
+        char json[4048];
 	strcpy(json, JSONs.c_str());
 	Document document;  
-	char buffer[500];
+	char buffer[4048];
 	memcpy(buffer, json, sizeof(json));
 	if (document.ParseInsitu(buffer).HasParseError())  return;
 
