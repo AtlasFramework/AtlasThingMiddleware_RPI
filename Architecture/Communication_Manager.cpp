@@ -354,29 +354,39 @@ void delivered(void *context, MQTTClient_deliveryToken dt){
 }
 
 int msgarrvd(void *context, char *topicName, int topicLen, MQTTClient_message *message){
-    	int i;
-    	printf("Message arrived\n");
-    	printf("   topic: %s\n", topicName);
-    	printf("   message: ");    	
-	char* payloadptr = (char *)message->payload;
-    	//for(i=0; i<message->payloadlen; i++)    putchar(*payloadptr++);    	
-	//putchar('\n');
 
-	std::string received= (char *)(message->payload);
+	std::string receivedN= (char *)(message->payload);
+	std::size_t pos = receivedN.find("}");
+  	std::string received = receivedN.substr (0, pos+1);
 
 	std::size_t found	=	0;
 	found = received.find(Communication_Manager::ThingATID);
 	if(found!=std::string::npos){
-			cout<<"Ignore receiving a self tweet (tweet annoucned by your Atlas thing before)"<<endl;
+			cout<<"Received a self tweet (tweet annoucned by your Atlas thing before)"<<endl;
+			cout<<"------------------------------------------------------------------"<<endl;
 	}else{
+
 			char json[4048];
 			strcpy(json, received.c_str());
 			Document document;  
 			char buffer[4048];
 			memcpy(buffer, json, sizeof(json));
 			if (document.ParseInsitu(buffer).HasParseError()) { 
-				cout<<"received unformated tweet: "<< received<<endl;  return 1;
+				cout<<"received the following unformated tweet: "<< received<<endl;
+				cout<<"------------------------------------------------------------------"<<endl;
+  				return 1;			
 			}
+
+			int i;
+
+		    	printf("\n\n Tweet received under topic: %s\n", topicName);
+		    	printf("  and the message: ");  
+			cout<<received<<endl;  	
+			char* payloadptr = (char *)message->payload;
+		    	//for(i=0; i<message->payloadlen; i++)    putchar(*payloadptr++);    	
+			//putchar('\n');
+
+
 			assert(document.IsObject());
 			assert(document["Space ID"].IsString());
 			string tweetType = document["Tweet Type"].GetString();
@@ -505,10 +515,10 @@ void Communication_Manager::MQTT_Publish(){
 		    	rc = MQTTClient_waitForCompletion(client, token, TIMEOUT);
 			wait(3);
 		}
+		cout<<"All tweets have been announced, after 20 seconds they will be announced again"<<endl;	
 		wait(20);
 	}
 
     	MQTTClient_disconnect(client, 10000);
     	MQTTClient_destroy(&client);
 }
-
