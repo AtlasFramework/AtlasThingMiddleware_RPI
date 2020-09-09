@@ -129,10 +129,10 @@ void Identity_Parser::parse_EntityIdentity(){
 }
 
 void Identity_Parser::parse_mateIdentityTweet(string JSONs){
-        char json[1024];
+        char json[4048];
 	strcpy(json, JSONs.c_str());
 	Document document;  
-	char buffer[500];
+	char buffer[4048];
 	memcpy(buffer, json, sizeof(json));
 	if (document.ParseInsitu(buffer).HasParseError())  return;
 
@@ -159,10 +159,10 @@ void Identity_Parser::parse_mateIdentityTweet(string JSONs){
 }
 
 void Identity_Parser::parse_mateLanguageTweet(string JSONs){
-        char json[1024];
+        char json[4048];
 	strcpy(json, JSONs.c_str());
 	Document document;  
-	char buffer[500];
+	char buffer[4048];
 	memcpy(buffer, json, sizeof(json));
 	if (document.ParseInsitu(buffer).HasParseError())  return;
 
@@ -188,10 +188,10 @@ void Identity_Parser::parse_mateLanguageTweet(string JSONs){
 }
 
 void Identity_Parser::parse_mateEntityTweet(string JSONs){
-        char json[1024];
+        char json[4048];
 	strcpy(json, JSONs.c_str());
 	Document document;  
-	char buffer[500];
+	char buffer[4048];
 	memcpy(buffer, json, sizeof(json));
 	if (document.ParseInsitu(buffer).HasParseError())  return;
 
