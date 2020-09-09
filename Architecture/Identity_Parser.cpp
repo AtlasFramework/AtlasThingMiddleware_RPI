@@ -45,7 +45,7 @@ void Identity_Parser::parse_ThingIdentity(){
 	string x8 = "\"Description\" : \""	+selfInfo_identity.thingDescription+"\"";
 	string x9 = "\"OS\" : \""         	+selfInfo_identity.thingOperatingSystem+"\"";
 
-	string JSONs = " { " + x1 + "," + x2 + ","+ x3 + ","+ x4 + ","+ x5 + ","+ x6 + ","+ x8 + "," + x9 + " }";
+	string JSONs = " { " + x1 + "," + x2 + ","+ x3 + ","+ x4 + ","+ x5 + ","+ x6 + ","+ x7 + ","+ x8 + "," + x9 + " }";
 	ThingIdentity_tweets.push_back(JSONs);
 }
 
