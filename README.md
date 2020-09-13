@@ -26,7 +26,7 @@ holds the entry point to compile Atlas-IoT_Thing  (readme file, cMServices shell
                 - OMALib    : Eclipse Wakaama (formerly liblwm2m), implementation of the Open Mobile Alliance's LightWeight M2M protocol (LwM2M)
 
 ### ConfigurationFiles/ : holds the different configuration files (e.g., Atlas IoTDDL) 
-[Use the IoT-DDL builder online tool to interactively build an IoT-DDL file for an Atlas thing.](https://atlasframework.github.io/IoT-DDL/DDL_Builder/builder.html)
+[Use the IoT-DDL builder online tool to build an IoT-DDL file for your Atlas thing.](https://atlasframework.github.io/IoT-DDL/DDL_Builder/builder.html)
 
 there is an initial IoTDDL in this version, if you will use it without replacing it with a new one - make sure to change the thing ID in the file.
 
@@ -75,7 +75,14 @@ From Github, download the zip version of the middleware on your RaspberryPi, the
  - cmake Main/
  - make
 
-### Step6: Run Atlas middleware
+### Step6: Add an IoT-DDL
+ - [Use this builder tool to build an IoT-DDL file for your Atlas thing.](https://atlasframework.github.io/IoT-DDL/DDL_Builder/builder.html)
+ - Navigate to the directory of Atlas-IoT_thing and add the genenerated IoT-DDL.xml file to the /ConfigurationFiles directory (replace the default file)
+ 
+### Step7: Run Atlas middleware
  - Through therminal, and under the directlory of the middleware, run the following command:
  - ./Atlas
+
+
+
 
