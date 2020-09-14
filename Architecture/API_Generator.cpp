@@ -115,27 +115,28 @@ void API_Generator::Generate_ServicesBundles(){
 	    	for(int i=1;i<=num_services;i++){
 
 			int Service_Number = i;
-
 			cout<<"Parsing Information of Service #"<<i<<" under entity #"<<j<<endl;
-
 			string Service_Name              = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"Name");
 
+			//Inputs
+			string Service_InputTypes        = "NULL";
+			string Service_InputDescription  = "NULL";
+			string Service_InputRange        = "NULL";
+		    	int num_Inputs = 0;
+		    	string num_of_Inputs = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"Service_NumberInputs");
+		    	num_Inputs =  atoi(num_of_Inputs.c_str());
 
-cout<<"Service Name"<<Service_Name<<endl;
+			if(num_Inputs > 0){
+			      Service_InputTypes        = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"Service_InputTypes");
+			      Service_InputDescription  = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"Service_InputDescriptions");
+			      //Service_InputRange        = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"Service_InputRange");
+			}
 
-
-
-			string Service_InputTypes        = "NULL"; //DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"InputTypes");
-
-			string Service_InputDescription  = "NULL"; //DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"InputDescription");
-
-			string Service_InputRange        = "NULL"; //DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"InputRange");
-
-
+			//Output
 			string Service_OutputTypes       = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"OutputType");
 
+			//Code
 			string Service_Code   		= DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"Service_Formula");
-			//vector<string> Service_Formula   = DDLM.parseXMLTagArray("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"Formula","Statement");
 		
 			cout<<"Generating service bundle for "<<Service_Name<<"under entity#"<<j<<endl;
 		
@@ -145,46 +146,19 @@ cout<<"Service Name"<<Service_Name<<endl;
 
 		
 			// Create service.def per service that will be used to generate the corresponding microservice -------------
-
 			auto fflags = std::ofstream::out | std::ofstream::trunc;        // Create the file (overwrite if it already exists)
-
 			std::ofstream def(dir + "service.def", fflags);
-
 			if (!def.is_open()) return;
-
 			def << "autogen definitions service;" << std::endl;             // the AutoGen header
 	
 
 			//set the library of the RaspberryPI GPIO
-	
 			//def << "library = " << "#include <wiringPi.h>" << ";" << std::endl;           // Add the service name
 
 			def << "name = " << Service_Name << ";" << std::endl;           // Add the service name
 
+
 			// Translate the Formula's statments into C code 
-
-			/*
-			   Supported commands:
-				Print: value
-				Print: \"string\"
-				Delay: value_msec
-				DigitalWrite_High: pin_id
-				DigitalWrite_Low: pin_id
-
-						<Statement> AnalogWrite(Pin#:20, Value:19) </Statement>
-						<Statement> reportedValue = DigitalRead(Pin#:17) </Statement>
-						<Statement> reportedValue = AnalogRead(Pin#:20) </Statement>
-
-
-				Buzzer_High(Pin#:20)
-				Buzzer_Low(Pin#:20)
-				Buzzer_Delay(Pin#:20)
-				DigitalWirte_Toggle(Pin#:20)
-
-
-
-			*/
-
 			string instruction = "";
 			std::vector<std::string> Service_Formula;
 			std::string::size_type pos = 0;
@@ -195,8 +169,6 @@ cout<<"Service Name"<<Service_Name<<endl;
 			}
 			Service_Formula.push_back(Service_Code.substr(prev));
 
-
-
 			for (auto& line : Service_Formula) {
 				//these instructions work on RaspberryPi only
 
@@ -204,6 +176,10 @@ cout<<"Service Name"<<Service_Name<<endl;
 								
 				std::size_t found=0;
 	      			found = line.find("//");
+				if (found!=std::string::npos) continue;
+	      			found = line.find("![");
+				if (found!=std::string::npos) continue;
+	      			found = line.find("]]");
 				if (found!=std::string::npos) continue;
 
 				cout<<"Formula #"<<line<<endl;
@@ -238,7 +214,6 @@ cout<<"Service Name"<<Service_Name<<endl;
 					continue;
 				}
 
-
 	      			found = line.find("Delay(");
 				if (found!=std::string::npos){
 	  				std::size_t foundx = line.find("(");
@@ -272,7 +247,6 @@ cout<<"Service Name"<<Service_Name<<endl;
 					continue;
 				}
 
-
 				found = line.find("print(");
 				if (found!=std::string::npos){
 	  				std::size_t foundx = line.find("(");
@@ -286,10 +260,8 @@ cout<<"Service Name"<<Service_Name<<endl;
 				}
 
 
-
-
-
-				//////not tested >>>>>>>>
+				//////not tested >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+				//////not tested >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 				found = line.find("DigitalRead(");
 				if (found!=std::string::npos){
@@ -425,26 +397,17 @@ cout<<"Service Name"<<Service_Name<<endl;
 			}
 
 			if(Service_OutputTypes == "void") {
-
 				def << "output = { type = void; };" << std::endl;
-
 			} else {
-
 				string Service_OutputDescription = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(num_Entities),"Resource_Service","Service_"+std::to_string(i),"OutputDescription");
-
 				string Service_OutputRange       = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(num_Entities),"Resource_Service","Service_"+std::to_string(i),"OutputRange");
-		
 				def << "output = { name = "<<Service_OutputDescription<<"; type = \""<<Service_OutputTypes<<"\"; };" << std::endl;
-
 			}
-	
 			def.close();
 
-
-			system(("make -CArchitecture/GeneratedServices/service " + Service_Name).c_str());
 			// This system call instructs the Makefile under '.../Architecture/GeneratedServices/service/Makefile'
 			// to generate the directory of the service
-
+			system(("make -CArchitecture/GeneratedServices/service " + Service_Name).c_str());
 			cout<<"Done Parsing and generating Service #"<<Service_Number<<endl;
 	    }
 	}
@@ -468,47 +431,58 @@ void API_Generator::Generate_ServicesAPIs(){
 	    
 
 	    	
-string Service_InputTypes        = "NULL"; //DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"InputTypes");
+		//string Service_InputTypes        = "NULL"; //DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"InputTypes");
 
 
 	    	for(int i=1;i<=num_services;i++){
-		int Service_Number = i;
-		string Service_Name              = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"Name");
-		string Service_InputTypes        = "NULL"; //DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"InputTypes");
-		string Service_InputDescription  = "NULL"; //DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"InputDescription");
-		string Service_InputRange        = "NULL"; //DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"InputRange");
-		string Service_OutputTypes       = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"OutputType");
-		string API_Input = "NULL";
-		string API_Output = "NULL";
+			int Service_Number = i;
+			string Service_Name              = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"Name");
 
-		if(Service_InputTypes.compare("NULL") !=0){
-		      	vector<string> types;
-		      	vector<string> description;
-		      	vector<string> Range;
-		      	string s;
-		      	istringstream f(Service_InputTypes);
-		      	istringstream d(Service_InputDescription);
-		      	istringstream r(Service_InputRange);
-		     	while(getline(f,s,','))  types.push_back(s);
-		     	while(getline(d,s,','))  description.push_back(s);
-		     	while(getline(r,s,','))  Range.push_back(s);
-			int number_Inputs=description.size();
-		        API_Input = description[0]+","+types[0]+","+Range[0];
+			string Service_InputTypes        = "NULL";
+			string Service_InputDescription  = "NULL";
+			string Service_InputRange        = "NULL";
+		    	int num_Inputs = 0;
+		    	string num_of_Inputs = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"Service_NumberInputs");
+		    	num_Inputs =  atoi(num_of_Inputs.c_str());
 
-			for(int i=1;i<description.size();i++)
-				API_Input = API_Input +"|" +description[i]+","+types[i]+","+Range[i];
-		}
+			if(num_Inputs > 0){
+			      Service_InputTypes        = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"Service_InputTypes");
+			      Service_InputDescription  = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"Service_InputDescriptions");
+			      //Service_InputRange        = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"Service_InputRange");
+			}
+		
+			string Service_OutputTypes       = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"OutputType");
+			string API_Input = "NULL";
+			string API_Output = "NULL";
 
-		if(Service_OutputTypes.compare("void") !=0) {
-			string Service_OutputDescription = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"OutputDescription");
-			string Service_OutputRange       = "NULL"; //DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"OutputRange");
+			if(Service_InputTypes.compare("NULL") !=0){
+			      	vector<string> types;
+			      	vector<string> description;
+			      	vector<string> Range;
+			      	string s;
+			      	istringstream f(Service_InputTypes);
+			      	istringstream d(Service_InputDescription);
+			      	istringstream r(Service_InputRange);
+			     	while(getline(f,s,','))  types.push_back(s);
+			     	while(getline(d,s,','))  description.push_back(s);
+			     	while(getline(r,s,','))  Range.push_back(s);
+				int number_Inputs=description.size();
+				API_Input = description[0]+","+types[0]+","+Range[0];
+
+				for(int i=1;i<description.size();i++)
+					API_Input = API_Input +"|" +description[i]+","+types[i]+","+Range[i];
+			}
+
+			if(Service_OutputTypes.compare("void") !=0) {
+				string Service_OutputDescription = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"OutputDescription");
+				string Service_OutputRange       = "NULL"; //DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"OutputRange");
 	
-			API_Output = Service_OutputDescription+","+Service_OutputTypes+","+Service_OutputRange;
-		}
+				API_Output = Service_OutputDescription+","+Service_OutputTypes+","+Service_OutputRange;
+			}
 	
-		string Generated_API = Service_Name+":["+API_Input+"]:("+API_Output+")";
-		APIs.push_back(Generated_API);
-	    }
+			string Generated_API = Service_Name+":["+API_Input+"]:("+API_Output+")";
+			APIs.push_back(Generated_API);
+	    	}
 	}
 }
 
@@ -543,19 +517,23 @@ string API_Generator::Handle_ServiceCall(string APICall){
 	}
 
         std::cout << "API call with valid ATID and SSID" << std::endl;
+
+
+
     	
     	int num_Entities = 1;
     	string num_of_Entities = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Structural_Metadata","Number_Entities");
     	num_Entities =  atoi(num_of_Entities.c_str());
 
+
 	for(int j=1;j<=num_Entities;j++){
 
-	    	string num_of_services 	= DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(j),"Resource_Service","Services_Number");
+	    	string num_of_services 	= DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Number_Services");
 	    	int num_services 	= atoi(num_of_services.c_str());
 	    
 	    	for(int i=1;i<=num_services;i++){
 			int Service_Number = i;
-			string Service_Name              = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(j),"Resource_Service","Service_"+std::to_string(i),"Name");
+			string Service_Name              = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"Name");
 		
 			if(Service_Name == document["Service Name"].GetString()){
 		                std::cout << "found a service match for the corresponding API call"<< std::endl;
@@ -582,7 +560,7 @@ string API_Generator::Handle_ServiceCall(string APICall){
 
 					cout<<"calling "<<Service_Name<<" with no inputs"<<endl;
 
-				    	string Service_OutputTypes       = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(j),"Resource_Service","Service_"+std::to_string(i),"OutputTypes");
+				    	string Service_OutputTypes       = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"OutputType");
 
 					if(Service_OutputTypes.compare("void") == 0) {
 						using f = void(void);
@@ -672,7 +650,7 @@ string API_Generator::Handle_ServiceCall(string APICall){
 					int sInput = stol(inputsx[0]);
 	  	                	cout<<"calling "<<Service_Name<<" with input "<<sInput<<endl;
 
-					string Service_OutputTypes       = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(j),"Resource_Service","Service_"+std::to_string(i),"OutputTypes");
+					string Service_OutputTypes       = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"OutputType");
 
 					if(Service_OutputTypes.compare("void") == 0) {
 						using f = void(int);
@@ -749,7 +727,7 @@ string API_Generator::Handle_ServiceCall(string APICall){
 					int sInput2 = stol(inputsx[1]);
 	  	                	cout<<"calling "<<Service_Name<<" with inputs "<<sInput1<<" and "<<sInput2<<endl;
 
-					string Service_OutputTypes       = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(j),"Resource_Service","Service_"+std::to_string(i),"OutputTypes");
+					string Service_OutputTypes       = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"OutputType");
 
 
 					if(Service_OutputTypes.compare("void") == 0) {
