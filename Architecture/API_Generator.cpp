@@ -109,26 +109,33 @@ void API_Generator::Generate_ServicesBundles(){
 	for(int j=1;j<=num_Entities;j++){
 
 		int num_services = 1; 
-	    	string num_of_services = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(j),"Resource_Service","Services_Number");
+	    	string num_of_services = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Number_Services");
 	    	num_services =  atoi(num_of_services.c_str());
 	    
 	    	for(int i=1;i<=num_services;i++){
 
 			int Service_Number = i;
 
-			cout<<"Parsing Information of Service #"<<Service_Number<<endl;
+			cout<<"Parsing Information of Service #"<<i<<" under entity #"<<j<<endl;
 
-			string Service_Name              = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(j),"Resource_Service","Service_"+std::to_string(i),"Name");
+			string Service_Name              = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"Name");
 
-			string Service_InputTypes        = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(j),"Resource_Service","Service_"+std::to_string(i),"InputTypes");
 
-			string Service_InputDescription  = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(j),"Resource_Service","Service_"+std::to_string(i),"InputDescription");
+cout<<"Service Name"<<Service_Name<<endl;
 
-			string Service_InputRange        = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(j),"Resource_Service","Service_"+std::to_string(i),"InputRange");
 
-			string Service_OutputTypes       = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(j),"Resource_Service","Service_"+std::to_string(i),"OutputTypes");
 
-			vector<string> Service_Formula   = DDLM.parseXMLTagArray("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(j),"Resource_Service","Service_"+std::to_string(i),"Formula","Statement");
+			string Service_InputTypes        = "NULL"; //DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"InputTypes");
+
+			string Service_InputDescription  = "NULL"; //DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"InputDescription");
+
+			string Service_InputRange        = "NULL"; //DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"InputRange");
+
+
+			string Service_OutputTypes       = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"OutputType");
+
+			string Service_Code   		= DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"Service_Formula");
+			//vector<string> Service_Formula   = DDLM.parseXMLTagArray("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"Formula","Statement");
 		
 			cout<<"Generating service bundle for "<<Service_Name<<"under entity#"<<j<<endl;
 		
@@ -179,18 +186,34 @@ void API_Generator::Generate_ServicesBundles(){
 			*/
 
 			string instruction = "";
-			for (auto& line : Service_Formula) {
+			std::vector<std::string> Service_Formula;
+			std::string::size_type pos = 0;
+		    	std::string::size_type prev = 0;
+			while ((pos = Service_Code.find("\n", prev)) != std::string::npos){
+				Service_Formula.push_back(Service_Code.substr(prev, pos - prev));
+				prev = pos + 1;
+			}
+			Service_Formula.push_back(Service_Code.substr(prev));
 
+
+
+			for (auto& line : Service_Formula) {
 				//these instructions work on RaspberryPi only
+
+				if(line.length() == 0)	continue;
+								
+				std::size_t found=0;
+	      			found = line.find("//");
+				if (found!=std::string::npos) continue;
 
 				cout<<"Formula #"<<line<<endl;
 
-				std::size_t found=0;
-	      			found = line.find("DigitalWrite_High(Pin#");
+	      			found = line.find("DigitalWrite_High(");
 				if (found!=std::string::npos){
-	  				std::size_t foundx = line.find(":");
+	  				std::size_t foundx = line.find("(");
+	  				std::size_t foundy = line.find(")");
 	  				if (foundx!=std::string::npos){
-						std::string pin_id = line.substr(foundx+1,line.size()-foundx-2);
+						std::string pin_id = line.substr(foundx+1, foundy-foundx-1);
 						def << "source = \"" << "wiringPiSetupGpio();" << "\";" << std::endl;
 						instruction = "pinMode(" + pin_id +", OUTPUT);";
 						def << "source = \"" << instruction << "\";" << std::endl;
@@ -200,11 +223,12 @@ void API_Generator::Generate_ServicesBundles(){
 					continue;
 				}
 
-	      			found = line.find("DigitalWrite_Low(Pin#");
+	      			found = line.find("DigitalWrite_Low(");
 				if (found!=std::string::npos){
-	  				std::size_t foundx = line.find(":");
+	  				std::size_t foundx = line.find("(");
+	  				std::size_t foundy = line.find(")");
 	  				if (foundx!=std::string::npos){
-						std::string pin_id = line.substr(foundx+1,line.size()-foundx-2);
+						std::string pin_id = line.substr(foundx+1, foundy-foundx-1);
 						def << "source = \"" << "wiringPiSetupGpio();" << "\";" << std::endl;
 						instruction = "pinMode(" + pin_id +", OUTPUT);";
 						def << "source = \"" << instruction << "\";" << std::endl;
@@ -214,13 +238,27 @@ void API_Generator::Generate_ServicesBundles(){
 					continue;
 				}
 
-	      			found = line.find("DigitalWrite_Blink(Pin#:");
+
+	      			found = line.find("Delay(");
 				if (found!=std::string::npos){
-	  				std::size_t foundx = line.find("Pin#:");
-	  				std::size_t foundy = line.find(", Delay:");
+	  				std::size_t foundx = line.find("(");
+	  				std::size_t foundy = line.find(")");
 	  				if (foundx!=std::string::npos){
-						std::string pin_id = line.substr (foundx+5,foundy-foundx-5);
-						std::string time   = line.substr (foundy+8,line.size()-foundy-9);
+						std::string time = line.substr(foundx+1, foundy-foundx-1);
+						instruction = "delay(" + time +");";
+						def << "source = \"" << instruction << "\";" << std::endl;
+					}
+					continue;
+				}
+
+	      			found = line.find("DigitalWrite_Blink(");
+				if (found!=std::string::npos){
+	  				std::size_t foundx = line.find("(");
+	  				std::size_t foundy = line.find(",");
+	  				std::size_t foundz = line.find(")");
+	  				if (foundx!=std::string::npos){
+						std::string pin_id = line.substr (foundx+1, foundy-foundx-1);
+						std::string time   = line.substr (foundy+1, foundz-foundy-1);
 						def << "source = \"" << "wiringPiSetupGpio();" << "\";" << std::endl;
 						instruction = "pinMode(" + pin_id +", OUTPUT);";
 						def << "source = \"" << instruction << "\";" << std::endl;
@@ -235,10 +273,47 @@ void API_Generator::Generate_ServicesBundles(){
 				}
 
 
-	      			found = line.find("AnalogWrite(Pin#:");
+				found = line.find("print(");
 				if (found!=std::string::npos){
-	  				std::size_t foundx = line.find("Pin#:");
-	  				std::size_t foundy = line.find(", Value:");
+	  				std::size_t foundx = line.find("(");
+	  				std::size_t foundy = line.find(")");
+	  				if (foundx!=std::string::npos){
+						std::string value = line.substr(foundx+1, foundy-foundx-1);
+						instruction = "std::cout << " + value + " << std::endl;";
+						def << "source = \"" << instruction << "\";" << std::endl;
+					}
+					continue;
+				}
+
+
+
+
+
+				//////not tested >>>>>>>>
+
+				found = line.find("DigitalRead(");
+				if (found!=std::string::npos){
+	  				std::size_t foundx = line.find("(");
+	  				std::size_t foundy = line.find(")");
+	  				std::size_t foundz = line.find("=");
+	  				if (foundx!=std::string::npos){
+						std::string pin_id = line.substr(foundx+1, foundy-foundx-1);
+						std::string returned = line.substr(0,foundz-1);
+						def << "source = \"" << "wiringPiSetupGpio();" << "\";" << std::endl;
+						instruction = "pinMode(" + pin_id +", INPUT);";
+						def << "source = \"" << instruction << "\";" << std::endl;
+						instruction = returned + " = "+ " digitalRead(" + pin_id +");";
+						def << "source = \"" << instruction << "\";" << std::endl; 
+					}
+					continue;
+				}
+
+
+
+	      			found = line.find("AnalogWrite(");
+				if (found!=std::string::npos){
+	  				std::size_t foundx = line.find("(");
+	  				std::size_t foundy = line.find(", ");
 	  				if (foundx!=std::string::npos){
 						std::string pin_id = line.substr (foundx+5,foundy-foundx-5);
 						std::string value   = line.substr (foundy+8,line.size()-foundy-9);
@@ -251,25 +326,22 @@ void API_Generator::Generate_ServicesBundles(){
 					continue;
 				}
 
-	      			found = line.find("DigitalRead(Pin#");
+	      			
+				found = line.find("print_string(");
 				if (found!=std::string::npos){
-	  				std::size_t foundx = line.find(":");
-	  				std::size_t foundy = line.find("=");
+	  				std::size_t foundx = line.find("(");
+	  				std::size_t foundy = line.find(")");
 	  				if (foundx!=std::string::npos){
-						std::string pin_id = line.substr(foundx+1,line.size()-foundx-2);
-						std::string returned = line.substr(0,foundy-1);
-						def << "source = \"" << "wiringPiSetupGpio();" << "\";" << std::endl;
-						instruction = "pinMode(" + pin_id +", INPUT);";
-						def << "source = \"" << instruction << "\";" << std::endl;
-						instruction = returned + " = "+ " digitalRead(" + pin_id +");";
-						def << "source = \"" << instruction << "\";" << std::endl; 
+						std::string value = line.substr(foundx+1, foundy-foundx-1);
+						instruction = "std::cout << \\\" " + value + "\\\" << std::endl;";
+						def << "source = \\\"" << instruction << "\\\";" << std::endl;
 					}
 					continue;
 				}
 
-	      			found = line.find("AnalogRead(Pin#");
+	      			found = line.find("AnalogRead(");
 				if (found!=std::string::npos){
-	  				std::size_t foundx = line.find(":");
+	  				std::size_t foundx = line.find("(");
 	  				std::size_t foundy = line.find("=");
 	  				if (foundx!=std::string::npos){
 						std::string pin_id = line.substr(foundx+1,line.size()-foundx-2);
@@ -283,88 +355,56 @@ void API_Generator::Generate_ServicesBundles(){
 					continue;
 				}
 
-	      			found = line.find("Delay(Value:");
-				if (found!=std::string::npos){
-	  				std::size_t foundx = line.find(":");
-	  				if (foundx!=std::string::npos){
-						std::string time = line.substr(foundx+1,line.size()-foundx-2);
-						instruction = "delay(" + time +");";
-						def << "source = \"" << instruction << "\";" << std::endl;
-					}
-					continue;
-				}
-
-				found = line.find("print_value(");
-				if (found!=std::string::npos){
-	  				std::size_t foundx = line.find("(");
-	  				if (foundx!=std::string::npos){
-						std::string value = line.substr(foundx+1,line.size()-foundx-2);
-						instruction = "std::cout << " + value + " << std::endl;";
-						def << "source = \"" << instruction << "\";" << std::endl;
-					}
-					continue;
-				}
-
-
-				found = line.find("print_string(");
-				if (found!=std::string::npos){
-	  				std::size_t foundx = line.find("(");
-	  				if (foundx!=std::string::npos){
-						std::string value = line.substr(foundx+1,line.size()-foundx-2);
-						instruction = "std::cout << \\\" " + value + "\\\" << std::endl;";
-						def << "source = \"" << instruction << "\";" << std::endl;
-					}
-					continue;
-				}
-
-
-
-
-
-
-
-
 
 
 				found = line.find("}");
 				if (found!=std::string::npos){
 	  				instruction = line;
 					def << "source = \"" << instruction << "\";" << std::endl;
+					continue;
 				}
 				found = line.find("{");
 				if (found!=std::string::npos){
 	  				instruction = line;
 					def << "source = \"" << instruction << "\";" << std::endl;
+					continue;
 				}
 				found = line.find("while(");
 				if (found!=std::string::npos){
 	  				instruction = line;
 					def << "source = \"" << instruction << "\";" << std::endl;
+					continue;
 				}
 				found = line.find("for(");
 				if (found!=std::string::npos){
 	  				instruction = line;
 					def << "source = \"" << instruction << "\";" << std::endl;
+					continue;
 				}
 				found = line.find("if(");
 				if (found!=std::string::npos){
 	  				instruction = line;
 					def << "source = \"" << instruction << "\";" << std::endl;
+					continue;
 				}
 				found = line.find("else if(");
 				if (found!=std::string::npos){
 	  				instruction = line;
 					def << "source = \"" << instruction << "\";" << std::endl;
+					continue;
 				}
 				found = line.find("else");
 				if (found!=std::string::npos){
 	  				instruction = line;
 					def << "source = \"" << instruction << "\";" << std::endl;
+					continue;
 				}
 
-				instruction = line + ";";
+				instruction = line;
 				def << "source = \"" << instruction << "\";" << std::endl;
 			}
+
+
 
 			if(Service_InputTypes.compare("NULL") !=0){
 		      		vector<string> types;
@@ -400,6 +440,7 @@ void API_Generator::Generate_ServicesBundles(){
 	
 			def.close();
 
+
 			system(("make -CArchitecture/GeneratedServices/service " + Service_Name).c_str());
 			// This system call instructs the Makefile under '.../Architecture/GeneratedServices/service/Makefile'
 			// to generate the directory of the service
@@ -422,16 +463,21 @@ void API_Generator::Generate_ServicesAPIs(){
 	for(int j=1;j<=num_Entities;j++){
 
 		int num_services = 1;      
-		string num_of_services = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(j),"Resource_Service","Services_Number");
+		string num_of_services = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Number_Services");
 		num_services =  atoi(num_of_services.c_str());
 	    
+
+	    	
+string Service_InputTypes        = "NULL"; //DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"InputTypes");
+
+
 	    	for(int i=1;i<=num_services;i++){
 		int Service_Number = i;
-		string Service_Name              = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(j),"Resource_Service","Service_"+std::to_string(i),"Name");
-		string Service_InputTypes        = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(j),"Resource_Service","Service_"+std::to_string(i),"InputTypes");
-		string Service_InputDescription  = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(j),"Resource_Service","Service_"+std::to_string(i),"InputDescription");
-		string Service_InputRange        = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(j),"Resource_Service","Service_"+std::to_string(i),"InputRange");
-		string Service_OutputTypes       = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(j),"Resource_Service","Service_"+std::to_string(i),"OutputTypes");
+		string Service_Name              = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"Name");
+		string Service_InputTypes        = "NULL"; //DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"InputTypes");
+		string Service_InputDescription  = "NULL"; //DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"InputDescription");
+		string Service_InputRange        = "NULL"; //DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"InputRange");
+		string Service_OutputTypes       = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"OutputType");
 		string API_Input = "NULL";
 		string API_Output = "NULL";
 
@@ -454,8 +500,8 @@ void API_Generator::Generate_ServicesAPIs(){
 		}
 
 		if(Service_OutputTypes.compare("void") !=0) {
-			string Service_OutputDescription = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(j),"Resource_Service","Service_"+std::to_string(i),"OutputDescription");
-			string Service_OutputRange       = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(j),"Resource_Service","Service_"+std::to_string(i),"OutputRange");
+			string Service_OutputDescription = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"OutputDescription");
+			string Service_OutputRange       = "NULL"; //DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"OutputRange");
 	
 			API_Output = Service_OutputDescription+","+Service_OutputTypes+","+Service_OutputRange;
 		}
@@ -830,4 +876,3 @@ void 	API_Generator::tesing_ServiceCall(){
 	cout<<resultJSONs<<endl;
         cout<<"done testing the received packet..................."<<endl;
 }
-
