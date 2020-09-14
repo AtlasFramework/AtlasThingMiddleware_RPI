@@ -69,10 +69,10 @@ Communication_Manager::Communication_Manager(){
 	for(int i=0;i<KTM.Services_tweets.size(); i++)    
 		{thingTweets.push_back(KTM.Services_tweets[i]); 	cout<<KTM.Services_tweets[i]<<endl; }
  	    
-	//KTM.parse_ThingRelationships();	
-	//cout<<"\n\n ... the generated Relationship-related Tweets:"<<endl; 
-	//for(int i=0;i<KTM.Relationships_tweets.size(); i++)   	
-	//	{thingTweets.push_back(KTM.Relationships_tweets[i]); 	cout<<KTM.Relationships_tweets[i]<<endl; }
+	KTM.parse_ThingRelationships();	
+	cout<<"\n\n ... the generated Relationship-related Tweets:"<<endl; 
+	for(int i=0;i<KTM.Relationships_tweets.size(); i++)   	
+		{thingTweets.push_back(KTM.Relationships_tweets[i]); 	cout<<KTM.Relationships_tweets[i]<<endl; }
      	
 
 
