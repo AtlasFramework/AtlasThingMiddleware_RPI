@@ -87,19 +87,26 @@ void Knowledge_Tweeting_Manager::parse_ThingServices(){
 	API_Generator APIGen;
 	APIGen.Generate_ServicesAPIs();
 	IoTDDL_Parser DDLM;
-	int entityId = 1; //for now
+	int entityId = 1;
+
+	int num_Entities = 1;
+    	string num_of_Entities = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Structural_Metadata","Number_Entities");
+    	num_Entities =  atoi(num_of_Entities.c_str());
+
+
     	for(int i=0;i<APIGen.APIs.size();i++){
+
 		TService TS;
-  	   	TS.setServiceName       (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(entityId),"Resource_Service","Service_"+std::to_string(i+1),"Name"));
-  	   	TS.setServiceVendor     (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(entityId),"Descriptive_Metadata","Entity_Vendor"));
   	   	TS.setServiceThingID    (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Descriptive_Metadata","Thing_ATID"));
-  	   	TS.setServiceEntityID   (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(entityId),"Descriptive_Metadata","Entity_Id"));
   	   	TS.setServiceSpaceID    (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Descriptive_Metadata","Thing_SSID"));
+  	   	TS.setServiceVendor     (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Descriptive_Metadata","Vendor"));
+  	   	TS.setServiceEntityID   (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Descriptive_Metadata","ID"));
   	   	TS.setServiceAPI        (APIGen.APIs[i]);
-	   	TS.setServiceType       (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(entityId),"Resource_Service","Service_"+std::to_string(i+1),"Type"));
-		TS.setServiceAppCategory(DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(entityId),"Resource_Service","Service_"+std::to_string(i+1),"AppCategory"));
-		TS.setServiceDescription(DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(entityId),"Resource_Service","Service_"+std::to_string(i+1),"LongDescription"));
-		TS.setServiceKeywords   (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(entityId),"Resource_Service","Service_"+std::to_string(i+1),"Keywords"));
+	   	TS.setServiceName       (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Services","Service_"+std::to_string(i+1),"Name"));
+  	   	TS.setServiceType       (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Services","Service_"+std::to_string(i+1),"Type"));
+		TS.setServiceAppCategory(DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Services","Service_"+std::to_string(i+1),"AppCategory"));
+		TS.setServiceDescription(DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Services","Service_"+std::to_string(i+1),"Description"));
+		TS.setServiceKeywords   (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Services","Service_"+std::to_string(i+1),"Keywords"));
 		//TS.displayInfo();
 
 		string x1 = "\"Tweet Type\" : \"Service\"";
@@ -174,11 +181,11 @@ void Knowledge_Tweeting_Manager::parse_ThingUnboundedServices(){
     	num_UBS =  atoi(num_of_UBS.c_str());
     	for(int i=0;i<num_UBS;i++){
 		UnBService UBS;
-  	   	UBS.name     = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(entityId),"Unbounded_Services","Service_"+std::to_string(i+1),"Name");
-  	   	UBS.vendor   = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(entityId),"Unbounded_Services","Service_"+std::to_string(i+1),"Vendor");
-  	   	UBS.type     = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(entityId),"Unbounded_Services","Service_"+std::to_string(i+1),"Type");
-  	   	UBS.keywords = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(entityId),"Unbounded_Services","Service_"+std::to_string(i+1),"Keywords");
-  	   	string vmatch= DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(entityId),"Unbounded_Services","Service_"+std::to_string(i+1),"Match");
+  	   	UBS.name     = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Unbounded_Services","Service_"+std::to_string(i+1),"Name");
+  	   	UBS.vendor   = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Unbounded_Services","Service_"+std::to_string(i+1),"Vendor");
+  	   	UBS.type     = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Unbounded_Services","Service_"+std::to_string(i+1),"Type");
+  	   	UBS.keywords = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Unbounded_Services","Service_"+std::to_string(i+1),"Keywords");
+  	   	string vmatch= DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Unbounded_Services","Service_"+std::to_string(i+1),"Match");
   	   	UBS.match = atoi(vmatch.c_str());
 		ThingUnboundedServices.push_back(UBS);
      	}
@@ -195,14 +202,14 @@ void Knowledge_Tweeting_Manager::parse_ThingRelationships(){
     	for(int i=0;i<num_relations;i++){
 		TRelation TR;
      	
-  	   	TR.setRelationName       (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(entityId),"Social_Relationship","Relation_"+std::to_string(i+1),"Name"));
-  	   	TR.setRelationType       (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(entityId),"Social_Relationship","Relation_"+std::to_string(i+1),"Type"));
-  	   	TR.setRelationCategory   (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(entityId),"Social_Relationship","Relation_"+std::to_string(i+1),"category"));
-  	   	TR.setRelationVendor     (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(entityId),"Social_Relationship","Relation_"+std::to_string(i+1),"Establisher"));
-  	   	TR.setRelationDescription(DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(entityId),"Social_Relationship","Relation_"+std::to_string(i+1),"Relation_Description"));
+  	   	TR.setRelationName       (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(entityId),"Social_Relationship","Relationship_"+std::to_string(i+1),"Name"));
+  	   	TR.setRelationType       (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(entityId),"Social_Relationship","Relationship_"+std::to_string(i+1),"Type"));
+  	   	TR.setRelationCategory   (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(entityId),"Social_Relationship","Relationship_"+std::to_string(i+1),"category"));
+  	   	TR.setRelationVendor     (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(entityId),"Social_Relationship","Relationship_"+std::to_string(i+1),"Establisher"));
+  	   	TR.setRelationDescription(DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(entityId),"Social_Relationship","Relationship_"+std::to_string(i+1),"Relation_Description"));
   	   	
-		string inputNames       = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(entityId),"Social_Relationship","Relation_"+std::to_string(i+1),"Inputs");
-  	   	string inputDescription = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(entityId),"Social_Relationship","Relation_"+std::to_string(i+1),"InputDescription");
+		string inputNames       = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(entityId),"Social_Relationship","Relationship_"+std::to_string(i+1),"Inputs");
+  	   	string inputDescription = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(entityId),"Social_Relationship","Relationship_"+std::to_string(i+1),"InputDescription");
 
               	vector<string> Names;
               	vector<string> Description;
