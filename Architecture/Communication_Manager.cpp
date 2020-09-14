@@ -69,10 +69,10 @@ Communication_Manager::Communication_Manager(){
 	for(int i=0;i<KTM.Services_tweets.size(); i++)    
 		{thingTweets.push_back(KTM.Services_tweets[i]); 	cout<<KTM.Services_tweets[i]<<endl; }
  	    
-	KTM.parse_ThingRelationships();	
-	cout<<"\n\n ... the generated Relationship-related Tweets:"<<endl; 
-	for(int i=0;i<KTM.Relationships_tweets.size(); i++)   	
-		{thingTweets.push_back(KTM.Relationships_tweets[i]); 	cout<<KTM.Relationships_tweets[i]<<endl; }
+	//KTM.parse_ThingRelationships();	
+	//cout<<"\n\n ... the generated Relationship-related Tweets:"<<endl; 
+	//for(int i=0;i<KTM.Relationships_tweets.size(); i++)   	
+	//	{thingTweets.push_back(KTM.Relationships_tweets[i]); 	cout<<KTM.Relationships_tweets[i]<<endl; }
      	
 
 
@@ -84,22 +84,24 @@ Communication_Manager::Communication_Manager(){
     	ServerPort 	= 6668;                      //thing's port the unicast socket listening to
 
     	//MQTT attributes, initiallization
-    	ADDRESS 		= DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Administrative_Metadata","Network_Manager", "InterOperableCommunication","BrokerURL");
+	/*
+    	ADDRESS 		= DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Administrative_Metadata","Network_Manager", "InterOperableCommunication","BrokerIP")+":"+
+				  DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Administrative_Metadata","Network_Manager", "InterOperableCommunication","BrokerPort");
    	CLIENTID_subscribe 	= DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Descriptive_Metadata","Thing_ATID") + "sub";
    	CLIENTID_publish 	= DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Descriptive_Metadata","Thing_ATID") + "pub";
 
-    	RootTOPIC 		= DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Administrative_Metadata","Network_Manager", "Topic_Root");
-    	MQTTClientTOPIC 	= DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Administrative_Metadata","Network_Manager", "Topic_Network_MQTTClient");
-    	PrivateBrokerTOPIC 	= DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Administrative_Metadata","Network_Manager", "Topic_Network_PrivateBroker");
-    	MulticastThingIdTOPIC 	= DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Administrative_Metadata","Network_Manager", "Topic_Multicast_ThingIdentity");
-    	MulticastEntityIdTOPIC 	= DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Administrative_Metadata","Network_Manager", "Topic_Multicast_EntityIdentity");
-    	MulticastAPITOPIC 	= DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Administrative_Metadata","Network_Manager", "Topic_Multicast_API");
-    	UnicastTOPIC 		= DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Administrative_Metadata","Network_Manager", "Topic_Unicast");
-
+    	RootTOPIC 		= DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Administrative_Metadata","Network_Manager", "Root");
+    	MQTTClientTOPIC 	= DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Administrative_Metadata","Network_Manager", "Network_MQTTClient");
+    	PrivateBrokerTOPIC 	= DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Administrative_Metadata","Network_Manager", "Network_PrivateBroker");
+    	MulticastThingIdTOPIC 	= DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Administrative_Metadata","Network_Manager", "Multicast_ThingIdentity");
+    	MulticastEntityIdTOPIC 	= DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Administrative_Metadata","Network_Manager", "Multicast_EntityIdentity");
+    	MulticastAPITOPIC 	= DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Administrative_Metadata","Network_Manager", "Multicast_API");
+    	UnicastTOPIC 		= DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Administrative_Metadata","Network_Manager", "Unicast");
 
     	//TOPIC 			= NULL;
     	//PAYLOAD 		= NULL;
     	QOS 			= 1;
+	*/
 
 }
 
