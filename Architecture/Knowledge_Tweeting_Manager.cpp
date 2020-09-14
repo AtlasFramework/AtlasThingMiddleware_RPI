@@ -174,119 +174,160 @@ void Knowledge_Tweeting_Manager::parse_mateServicesTweet(string JSONs){
 
 
 void Knowledge_Tweeting_Manager::parse_ThingUnboundedServices(){
+	
 	IoTDDL_Parser DDLM;
-	int entityId = 1; //for now
-	int num_UBS = 1;  
-    	string num_of_UBS = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(num_UBS),"Unbounded_Services","Number");
-    	num_UBS =  atoi(num_of_UBS.c_str());
-    	for(int i=0;i<num_UBS;i++){
-		UnBService UBS;
-  	   	UBS.name     = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Unbounded_Services","Service_"+std::to_string(i+1),"Name");
-  	   	UBS.vendor   = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Unbounded_Services","Service_"+std::to_string(i+1),"Vendor");
-  	   	UBS.type     = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Unbounded_Services","Service_"+std::to_string(i+1),"Type");
-  	   	UBS.keywords = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Unbounded_Services","Service_"+std::to_string(i+1),"Keywords");
-  	   	string vmatch= DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Unbounded_Services","Service_"+std::to_string(i+1),"Match");
-  	   	UBS.match = atoi(vmatch.c_str());
-		ThingUnboundedServices.push_back(UBS);
-     	}
+    	int num_Entities = 1;
+    	string num_of_Entities = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Structural_Metadata","Number_Entities");
+    	num_Entities =  atoi(num_of_Entities.c_str());
+
+	for(int j=1;j<=num_Entities;j++){
+		int num_UBS = 0;  
+	    	string num_of_UBS = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"UnboundedService","Number_UnboundedServices");
+	    	num_UBS =  atoi(num_of_UBS.c_str());
+		if(num_UBS == 0) return;
+	    	for(int i=1;i<=num_UBS;i++){
+			UnBService UBS;
+	  	   	UBS.name     = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"UnboundedService","UB_"+std::to_string(i),"Name");
+	  	   	UBS.vendor   = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"UnboundedService","UB_"+std::to_string(i),"MatchVendor");
+	  	   	UBS.type     = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"UnboundedService","UB_"+std::to_string(i),"MatchType");
+	  	   	UBS.keywords = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"UnboundedService","UB_"+std::to_string(i),"MatchKeywords");
+	  	   	string vmatch= DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"UnboundedService","UB_"+std::to_string(i),"MatchValue");
+	  	   	UBS.match = atoi(vmatch.c_str());
+			ThingUnboundedServices.push_back(UBS);
+	     	}
+	}
 }
 
+
 void Knowledge_Tweeting_Manager::parse_ThingRelationships(){
+
 	parse_ThingUnboundedServices();
 	IoTDDL_Parser DDLM;
-	int entityId = 1;         //for now
-	int num_relations = 1;  
-    	string num_of_services = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(num_relations),"Social_Relationship","Number");
-    	num_relations =  atoi(num_of_services.c_str());
-    
-    	for(int i=0;i<num_relations;i++){
-		TRelation TR;
-     	
-  	   	TR.setRelationName       (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(entityId),"Social_Relationship","Relationship_"+std::to_string(i+1),"Name"));
-  	   	TR.setRelationType       (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(entityId),"Social_Relationship","Relationship_"+std::to_string(i+1),"Type"));
-  	   	TR.setRelationCategory   (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(entityId),"Social_Relationship","Relationship_"+std::to_string(i+1),"category"));
-  	   	TR.setRelationVendor     (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(entityId),"Social_Relationship","Relationship_"+std::to_string(i+1),"Establisher"));
-  	   	TR.setRelationDescription(DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(entityId),"Social_Relationship","Relationship_"+std::to_string(i+1),"Relation_Description"));
-  	   	
-		string inputNames       = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(entityId),"Social_Relationship","Relationship_"+std::to_string(i+1),"Inputs");
-  	   	string inputDescription = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(entityId),"Social_Relationship","Relationship_"+std::to_string(i+1),"InputDescription");
+    	int num_Entities = 1;
+    	string num_of_Entities = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Structural_Metadata","Number_Entities");
+    	num_Entities =  atoi(num_of_Entities.c_str());
 
-              	vector<string> Names;
-              	vector<string> Description;
-	      	string s;
-              	istringstream iNames(inputNames);
-              	istringstream iDescription(inputDescription);        //the services first then the unbounded service
-	     	while(getline(iNames,s,','))        Names.push_back(s);
-	     	while(getline(iDescription,s,','))  Description.push_back(s);
-		
-		int numberservice = 0;
-		int firstSer = 1,secondSer = 1; //0 for service and 1 for unbounded
-		for(int i=0;i<Description.size();i++){
-			if(Description[i] == "Service"){
-				//cout<<"input is normal service named"<<Names[i]<<endl;
-				for(int j=0;j<ThingServices.size();j++){
-					if(ThingServices[j].getServiceName() == Names[i]){
-						//cout<<"found a match in the vector"<<endl;
-						numberservice++;
-						if(numberservice == 1)     { firstSer = 0; TR.setSPI1(&ThingServices[j]); }
-						else if(numberservice == 2){ secondSer= 0; TR.setSPI2(&ThingServices[j]); }
-						break;
-					}
-				}//end of ThingServices
-			}
-			else if(Description[i] == "UnboundedService"){ 
-				//cout<<"input is unbounded service named"<<Names[i]<<endl;
-				numberservice++;
-				if(numberservice == 1){ 
-					for(int x=0;x<ThingUnboundedServices.size();x++){
-						if(Names[i] == ThingUnboundedServices[x].name){
-							int index = findMatch(ThingUnboundedServices[x]); 
-							if(index == -1) break;
-							TR.setSPI1(&ThingServices[index]); 
-							firstSer = 0;
-						}
-					}
-				}
-				else if(numberservice == 2){ 
-					for(int x=0;x<ThingUnboundedServices.size();x++){
-						if(Names[i] == ThingUnboundedServices[x].name){
-							int index = findMatch(ThingUnboundedServices[x]); 
-							if(index == -1) break;
-							TR.setSPI2(&ThingServices[index]); 
-							secondSer = 0;
-						}
-					}
-				}
-			}
-			else                                          
-				cout<<"undefined type of service listed in the ddl"<<endl;
-		}//the end of Description
+	for(int j=1;j<=num_Entities;j++){
+
+		int num_relations = 0;  
+	    	string num_of_services = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Relationships","Number_Relationships");
+	    	num_relations =  atoi(num_of_services.c_str());
+
+		if(num_relations == 0) return;
+
+	    	for(int i=1;i<=num_relations;i++){
+			TRelation TR;
+	  	   	TR.setRelationName       (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Relationships","Relationship_"+std::to_string(i),"Name"));
+	  	   	TR.setRelationType       (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Relationships","Relationship_"+std::to_string(i),"type"));
+	  	   	TR.setRelationCategory   ("Cooperative");
+	  	   	//TR.setRelationCategory   (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Relationships","Relationship_"+std::to_string(i),"category"));
+	  	   	TR.setRelationVendor     (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Relationships","Relationship_"+std::to_string(i),"Establisher"));
+	  	   	TR.setRelationDescription(DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Relationships","Relationship_"+std::to_string(i),"Description"));
+	  	   	
 
 
-		if(firstSer == 0 && secondSer == 0){
+
 			string x1 = "\"Tweet Type\" : \"Relationship\"";
 			string x2 = "\"Name\" : \""+TR.getRelationName()+"\"";
 			string x3 = "\"Owner\" : \""+TR.getRelationVendor()+"\"";
 			string x4 = "\"Category\" : \""+TR.getRelationCategory()+"\"";
 			string x5 = "\"Type\" : \""+TR.getRelationType()+"\"";
 			string x6 = "\"Description\" : \""+TR.getRelationDescription()+"\"";
-			string x7 = "\"FS name\" : \""+TR.getSPI1()->getServiceName()+"\"";
-			string x8 = "\"FS tID\" : \""+TR.getSPI1()->getServiceThingID()+"\"";
-			string x9 = "\"FS sID\" : \""+TR.getSPI1()->getServiceSpaceID()+"\"";
-			string x10 = "\"SS name\" : \""+TR.getSPI2()->getServiceName()+"\"";
-			string x11 = "\"SS tID\" : \""+TR.getSPI2()->getServiceThingID()+"\"";
-			string x12 = "\"SS sID\" : \""+TR.getSPI2()->getServiceSpaceID()+"\"";
+			string x7 = "\"FS name\" : \""+DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Relationships","Relationship_"+std::to_string(i),"Input1")+"\"";
+			string x8 = "\"SS name\" : \""+DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Relationships","Relationship_"+std::to_string(i),"Input2")+"\"";
 					
-			string JSONs = " { " + x1 + "," + x2 + ","+ x3 + ","+ x4 + ","+ x5 + ","+ x6 + ","+ x7 + "," + x8 + ","+ x9 + ","+ x10 + ","+ x11 + ","+ x12 + " }";
+			string JSONs = " { " + x1 + "," + x2 + ","+ x3 + ","+ x4 + ","+ x5 + ","+ x6 + ","+ x7 + "," + x8 + " }";
 			cout<<"new full relation added"<<endl;
 			Relationships_tweets.push_back(JSONs);
 			ThingRelationships.push_back(TR);
-			//thingLocalGraph.addSPI_Link(&ThingRelationships[ThingRelationships.size()-1]);
-		}else{
-			cout<<"new unbounded relation added"<<endl;
-			ThingUnboundedRelationships.push_back(TR);
-		}
-     	}
+
+
+
+
+			//need to be updated>>>>>
+
+			//string inputNames       = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Relationships","Relationship_"+std::to_string(i),"Inputs");
+	  	   	//string inputDescription = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Relationships","Relationship_"+std::to_string(i),"InputDescription");
+			/*
+		      	vector<string> Names;
+		      	vector<string> Description;
+		      	string s;
+		      	istringstream iNames(inputNames);
+		      	istringstream iDescription(inputDescription);        //the services first then the unbounded service
+		     	while(getline(iNames,s,','))        Names.push_back(s);
+		     	while(getline(iDescription,s,','))  Description.push_back(s);
+		
+			int numberservice = 0;
+			int firstSer = 1,secondSer = 1; //0 for service and 1 for unbounded
+			for(int i=0;i<Description.size();i++){
+				if(Description[i] == "Service"){
+					//cout<<"input is normal service named"<<Names[i]<<endl;
+					for(int j=0;j<ThingServices.size();j++){
+						if(ThingServices[j].getServiceName() == Names[i]){
+							//cout<<"found a match in the vector"<<endl;
+							numberservice++;
+							if(numberservice == 1)     { firstSer = 0; TR.setSPI1(&ThingServices[j]); }
+							else if(numberservice == 2){ secondSer= 0; TR.setSPI2(&ThingServices[j]); }
+							break;
+						}
+					}//end of ThingServices
+				}
+				else if(Description[i] == "UnboundedService"){ 
+					//cout<<"input is unbounded service named"<<Names[i]<<endl;
+					numberservice++;
+					if(numberservice == 1){ 
+						for(int x=0;x<ThingUnboundedServices.size();x++){
+							if(Names[i] == ThingUnboundedServices[x].name){
+								int index = findMatch(ThingUnboundedServices[x]); 
+								if(index == -1) break;
+								TR.setSPI1(&ThingServices[index]); 
+								firstSer = 0;
+							}
+						}
+					}
+					else if(numberservice == 2){ 
+						for(int x=0;x<ThingUnboundedServices.size();x++){
+							if(Names[i] == ThingUnboundedServices[x].name){
+								int index = findMatch(ThingUnboundedServices[x]); 
+								if(index == -1) break;
+								TR.setSPI2(&ThingServices[index]); 
+								secondSer = 0;
+							}
+						}
+					}
+				}
+				else                                          
+					cout<<"undefined type of service listed in the ddl"<<endl;
+			}//the end of Description
+
+
+			if(firstSer == 0 && secondSer == 0){
+				string x1 = "\"Tweet Type\" : \"Relationship\"";
+				string x2 = "\"Name\" : \""+TR.getRelationName()+"\"";
+				string x3 = "\"Owner\" : \""+TR.getRelationVendor()+"\"";
+				string x4 = "\"Category\" : \""+TR.getRelationCategory()+"\"";
+				string x5 = "\"Type\" : \""+TR.getRelationType()+"\"";
+				string x6 = "\"Description\" : \""+TR.getRelationDescription()+"\"";
+				string x7 = "\"FS name\" : \""+TR.getSPI1()->getServiceName()+"\"";
+				string x8 = "\"FS tID\" : \""+TR.getSPI1()->getServiceThingID()+"\"";
+				string x9 = "\"FS sID\" : \""+TR.getSPI1()->getServiceSpaceID()+"\"";
+				string x10 = "\"SS name\" : \""+TR.getSPI2()->getServiceName()+"\"";
+				string x11 = "\"SS tID\" : \""+TR.getSPI2()->getServiceThingID()+"\"";
+				string x12 = "\"SS sID\" : \""+TR.getSPI2()->getServiceSpaceID()+"\"";
+					
+				string JSONs = " { " + x1 + "," + x2 + ","+ x3 + ","+ x4 + ","+ x5 + ","+ x6 + ","+ x7 + "," + x8 + ","+ x9 + ","+ x10 + ","+ x11 + ","+ x12 + " }";
+				cout<<"new full relation added"<<endl;
+				Relationships_tweets.push_back(JSONs);
+				ThingRelationships.push_back(TR);
+				//thingLocalGraph.addSPI_Link(&ThingRelationships[ThingRelationships.size()-1]);
+			}else{
+				cout<<"new unbounded relation added"<<endl;
+				ThingUnboundedRelationships.push_back(TR);
+			}
+			*/
+	     	}
+
+	}
 }
 
 void Knowledge_Tweeting_Manager::parse_mateRelationsTweet(string JSONs){
