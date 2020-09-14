@@ -98,20 +98,18 @@ void Identity_Parser::parse_EntityIdentity(){
 
 	     	selfInfo_entity.thingID           = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Descriptive_Metadata","Thing_ATID");
 	     	selfInfo_entity.smartspaceID      = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Descriptive_Metadata","Thing_SSID");
-		selfInfo_entity.entityID          = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(j),"Descriptive_Metadata","Entity_Id");
-
-
-		selfInfo_entity.entityName        = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(j),"Descriptive_Metadata","Entity_Name");
+		selfInfo_entity.entityID          = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Descriptive_Metadata","ID");
+		selfInfo_entity.entityName        = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Descriptive_Metadata","Name");
 		selfInfo_entity.entityCategory    = 
-			DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(j),"Descriptive_Metadata","Entity_Category");
+			DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Descriptive_Metadata","Category");
 		selfInfo_entity.entityOwner       = 
-			DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(j),"Descriptive_Metadata","Entity_Owner");
+			DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Descriptive_Metadata","Owner");
 		selfInfo_entity.entityVendor      = 
-			DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(j),"Descriptive_Metadata","Entity_Vendor");
+			DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Descriptive_Metadata","Vendor");
 		selfInfo_entity.entityType        = 
-			DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(j),"Descriptive_Metadata","Entity_Type");
+			DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Descriptive_Metadata","Type");
 		selfInfo_entity.entityDescription = 
-			DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(j),"Descriptive_Metadata","Entity_Description");
+			DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Descriptive_Metadata","Description");
 	     	
 		string x1 = "\"Tweet Type\" : \"Identity_Entity\"";
 		string x2 = "\"Thing ID\" : \""		+selfInfo_entity.thingID+"\"";
