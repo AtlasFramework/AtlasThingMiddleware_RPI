@@ -28,34 +28,49 @@ IoTDDL_Parser::~IoTDDL_Parser(){
 //get data of tag with 4th level
 string IoTDDL_Parser::parseXMLTag(string firstTag, string secondTag, string thirdTag, string fourthTag){
 	if(!fileExist) return "";
+try{
 	const char * a = firstTag.c_str();
 	const char * b = secondTag.c_str();
 	const char * c = thirdTag.c_str();
 	const char * d = fourthTag.c_str();
 	return doc.FirstChildElement(a)->FirstChildElement(b)->FirstChildElement(c)->FirstChildElement(d)->GetText();
+
+}catch( ... ){
+  return "";
+}
+
+
 }
 
 //get data of tag with 5th level
 string IoTDDL_Parser::parseXMLTag(string firstTag, string secondTag, string thirdTag, string fourthTag, string fifthTag){
 	if(!fileExist) return "";
-	const char * a = firstTag.c_str();
-	const char * b = secondTag.c_str();
-	const char * c = thirdTag.c_str();
-	const char * d = fourthTag.c_str();
-	const char * e = fifthTag.c_str();
-	return doc.FirstChildElement(a)->FirstChildElement(b)->FirstChildElement(c)->FirstChildElement(d)->FirstChildElement(e)->GetText();
+	try{
+		const char * a = firstTag.c_str();
+		const char * b = secondTag.c_str();
+		const char * c = thirdTag.c_str();
+		const char * d = fourthTag.c_str();
+		const char * e = fifthTag.c_str();
+		return doc.FirstChildElement(a)->FirstChildElement(b)->FirstChildElement(c)->FirstChildElement(d)->FirstChildElement(e)->GetText();
+	}catch( ... ){
+  		return "";
+	}
 }
 
 //get data of tag with 6th level
 string IoTDDL_Parser::parseXMLTag(string firstTag, string secondTag, string thirdTag, string fourthTag, string fifthTag, string sixthTag){
 	if(!fileExist) return "";
-	const char * a = firstTag.c_str();
-	const char * b = secondTag.c_str();
-	const char * c = thirdTag.c_str();
-	const char * d = fourthTag.c_str();
-	const char * e = fifthTag.c_str();
-	const char * f = sixthTag.c_str();
-	return doc.FirstChildElement(a)->FirstChildElement(b)->FirstChildElement(c)->FirstChildElement(d)->FirstChildElement(e)->FirstChildElement(f)->GetText();
+	try{
+		const char * a = firstTag.c_str();
+		const char * b = secondTag.c_str();
+		const char * c = thirdTag.c_str();
+		const char * d = fourthTag.c_str();
+		const char * e = fifthTag.c_str();
+		const char * f = sixthTag.c_str();
+		return doc.FirstChildElement(a)->FirstChildElement(b)->FirstChildElement(c)->FirstChildElement(d)->FirstChildElement(e)->FirstChildElement(f)->GetText();
+	}catch( ... ){
+	  return "";
+	}
 }
 
 vector<string> IoTDDL_Parser::parseXMLTagArray(string firstTag, string secondTag, string thirdTag, string fourthTag, string fifthTag, string sixthTag) {
@@ -606,5 +621,3 @@ void IoTDDL_Parser::addXMLTag(string maintag, string mainTag2, string mainTag3, 
         	out.close();
     	}
 }
-
-
