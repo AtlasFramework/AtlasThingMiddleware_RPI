@@ -65,7 +65,7 @@ From Github, download the zip version of the middleware on your RaspberryPi, the
  - sudo mv ~/Desktop/cppmicroservices4/cppmicroservices/ /usr/local/include/
 
 
-### Step4: Install WiringPi library and Enabling the hardware interfaces
+### Step4: Install WiringPi library and enable the hardware interfaces
  - unzip the folder named WiringPi-master under Atlas-IoT_Thing/lib/WiringPi-master/ of the middleware
  - cd to the WiringPi-master folder
  - ./build
