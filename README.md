@@ -65,10 +65,15 @@ From Github, download the zip version of the middleware on your RaspberryPi, the
  - sudo mv ~/Desktop/cppmicroservices4/cppmicroservices/ /usr/local/include/
 
 
-### Step4: Install WiringPi library 
+### Step4: Install WiringPi library and Enabling the hardware interfaces
  - unzip the folder named WiringPi-master under Atlas-IoT_Thing/lib/WiringPi-master/ of the middleware
  - cd to the WiringPi-master folder
  - ./build
+ - sudo apt update
+ - sudo apt upgrade
+ - sudo apt install rpi.gpio
+ - sudo raspi-config
+ - Go into “Interfacing Options”, then enable I2C and SPI in each submenu
 
 ### Step5: Compile and Build Atlas middleware
  - Navigate to the directory of Atlas-IoT_thing (use cd command) and Compile as follows:
