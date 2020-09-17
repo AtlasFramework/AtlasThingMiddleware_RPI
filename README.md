@@ -73,7 +73,7 @@ From Github, download the zip version of the middleware on your RaspberryPi, the
  - sudo apt upgrade
  - sudo apt install rpi.gpio
  - sudo raspi-config
- - Go into “Interfacing Options”, then enable I2C and SPI in each submenu
+ - under “Interfacing Options”, enable both I2C and SPI
 
 ### Step5: Compile and Build Atlas middleware
  - Navigate to the directory of Atlas-IoT_thing (use cd command) and Compile as follows:
