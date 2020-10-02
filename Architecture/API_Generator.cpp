@@ -182,7 +182,7 @@ void API_Generator::Generate_ServicesBundles(){
 	      			found = line.find("]]");
 				if (found!=std::string::npos) continue;
 
-				cout<<"Formula #"<<line<<endl;
+				//cout<<"Formula #"<<line<<endl;
 
 	      			found = line.find("DigitalWrite_High(");
 				if (found!=std::string::npos){
@@ -247,7 +247,7 @@ void API_Generator::Generate_ServicesBundles(){
 					continue;
 				}
 
-				found = line.find("print(");
+				found = line.find("print_value(");
 				if (found!=std::string::npos){
 	  				std::size_t foundx = line.find("(");
 	  				std::size_t foundy = line.find(")");
@@ -259,6 +259,17 @@ void API_Generator::Generate_ServicesBundles(){
 					continue;
 				}
 
+				found = line.find("print_string(");
+				if (found!=std::string::npos){
+	  				std::size_t foundx = line.find("(");
+	  				std::size_t foundy = line.find(")");
+	  				if (foundx!=std::string::npos){
+						std::string value = line.substr(foundx+1, foundy-foundx-1);
+						instruction = "std::cout << \\\" " + value + "\\\" << std::endl;";
+						def << "source = \"" << instruction << "\";" << std::endl;
+					}
+					continue;
+				}
 
 				//////not tested >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 				//////not tested >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -299,17 +310,7 @@ void API_Generator::Generate_ServicesBundles(){
 				}
 
 	      			
-				found = line.find("print_string(");
-				if (found!=std::string::npos){
-	  				std::size_t foundx = line.find("(");
-	  				std::size_t foundy = line.find(")");
-	  				if (foundx!=std::string::npos){
-						std::string value = line.substr(foundx+1, foundy-foundx-1);
-						instruction = "std::cout << \\\" " + value + "\\\" << std::endl;";
-						def << "source = \\\"" << instruction << "\\\";" << std::endl;
-					}
-					continue;
-				}
+				
 
 	      			found = line.find("AnalogRead(");
 				if (found!=std::string::npos){
@@ -396,11 +397,12 @@ void API_Generator::Generate_ServicesBundles(){
 
 			}
 
+
 			if(Service_OutputTypes == "void") {
 				def << "output = { type = void; };" << std::endl;
 			} else {
-				string Service_OutputDescription = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(num_Entities),"Resource_Service","Service_"+std::to_string(i),"OutputDescription");
-				string Service_OutputRange       = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(num_Entities),"Resource_Service","Service_"+std::to_string(i),"OutputRange");
+				string Service_OutputDescription       = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"OutputDescription");
+				//string Service_OutputRange       = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(num_Entities),"Resource_Service","Service_"+std::to_string(i),"OutputRange");
 				def << "output = { name = "<<Service_OutputDescription<<"; type = \""<<Service_OutputTypes<<"\"; };" << std::endl;
 			}
 			def.close();
@@ -429,10 +431,7 @@ void API_Generator::Generate_ServicesAPIs(){
 		string num_of_services = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Number_Services");
 		num_services =  atoi(num_of_services.c_str());
 	    
-
-	    	
 		//string Service_InputTypes        = "NULL"; //DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"InputTypes");
-
 
 	    	for(int i=1;i<=num_services;i++){
 			int Service_Number = i;
@@ -448,7 +447,7 @@ void API_Generator::Generate_ServicesAPIs(){
 			if(num_Inputs > 0){
 			      Service_InputTypes        = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"Service_InputTypes");
 			      Service_InputDescription  = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"Service_InputDescriptions");
-			      //Service_InputRange        = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"Service_InputRange");
+			      //Service_InputRange      = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"Service_InputRange");
 			}
 		
 			string Service_OutputTypes       = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"OutputType");
@@ -458,26 +457,26 @@ void API_Generator::Generate_ServicesAPIs(){
 			if(Service_InputTypes.compare("NULL") !=0){
 			      	vector<string> types;
 			      	vector<string> description;
-			      	vector<string> Range;
+			      	//vector<string> Range;
 			      	string s;
 			      	istringstream f(Service_InputTypes);
 			      	istringstream d(Service_InputDescription);
-			      	istringstream r(Service_InputRange);
+			      	//istringstream r(Service_InputRange);
 			     	while(getline(f,s,','))  types.push_back(s);
 			     	while(getline(d,s,','))  description.push_back(s);
-			     	while(getline(r,s,','))  Range.push_back(s);
+			     	//while(getline(r,s,','))  Range.push_back(s);
 				int number_Inputs=description.size();
-				API_Input = description[0]+","+types[0]+","+Range[0];
+				API_Input = description[0]+","+types[0]+", NULL"; //+Range[0];
 
 				for(int i=1;i<description.size();i++)
-					API_Input = API_Input +"|" +description[i]+","+types[i]+","+Range[i];
+					API_Input = API_Input +"|" +description[i]+","+types[i]+", NULL"; //+Range[i];
 			}
 
 			if(Service_OutputTypes.compare("void") !=0) {
 				string Service_OutputDescription = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"OutputDescription");
-				string Service_OutputRange       = "NULL"; //DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Services","Service_"+std::to_string(i),"OutputRange");
-	
-				API_Output = Service_OutputDescription+","+Service_OutputTypes+","+Service_OutputRange;
+				//string Service_OutputRange     = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(num_Entities),"Resource_Service","Service_"+std::to_string(i),"OutputRange");
+							
+				API_Output = Service_OutputDescription+","+Service_OutputTypes+", NULL"; //+Service_OutputRange;
 			}
 	
 			string Generated_API = Service_Name+":["+API_Input+"]:("+API_Output+")";
@@ -485,6 +484,10 @@ void API_Generator::Generate_ServicesAPIs(){
 	    	}
 	}
 }
+
+
+
+
 
 string API_Generator::Handle_ServiceCall(string APICall){
 	
