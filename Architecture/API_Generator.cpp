@@ -177,6 +177,10 @@ void API_Generator::Generate_ServicesBundles(){
 				std::size_t found=0;
 	      			found = line.find("//");
 				if (found!=std::string::npos) continue;
+	      			found = line.find("return");
+				if (found!=std::string::npos) continue;
+	      			found = line.find("cout");
+				if (found!=std::string::npos) continue;
 	      			found = line.find("![");
 				if (found!=std::string::npos) continue;
 	      			found = line.find("]]");
@@ -265,7 +269,7 @@ void API_Generator::Generate_ServicesBundles(){
 	  				std::size_t foundy = line.find(")");
 	  				if (foundx!=std::string::npos){
 						std::string value = line.substr(foundx+1, foundy-foundx-1);
-						instruction = "std::cout << \\\" " + value + "\\\" << std::endl;";
+						instruction = "std::cout << " + value + " << std::endl;";
 						def << "source = \"" << instruction << "\";" << std::endl;
 					}
 					continue;
