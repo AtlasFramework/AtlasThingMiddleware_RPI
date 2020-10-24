@@ -90,43 +90,52 @@ void Knowledge_Tweeting_Manager::parse_ThingServices(){
 	int entityId = 1;
 
 	int num_Entities = 1;
-    	string num_of_Entities = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Structural_Metadata","Number_Entities");
+	string num_of_Entities = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Structural_Metadata","Number_Entities");
     	num_Entities =  atoi(num_of_Entities.c_str());
 
+	for(int j=0;j<num_Entities;j++){
 
-    	for(int i=0;i<APIGen.APIs.size();i++){
+		//get the number of services under this entity
+		int num_Services = 1;
+		string num_of_Services = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j+1),"Services","Number_Services");
+  	   	
+		num_Services =  atoi(num_of_Services.c_str());
 
-		TService TS;
-  	   	TS.setServiceThingID    (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Descriptive_Metadata","Thing_ATID"));
-  	   	TS.setServiceSpaceID    (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Descriptive_Metadata","Thing_SSID"));
-  	   	TS.setServiceVendor     (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Descriptive_Metadata","Vendor"));
-  	   	TS.setServiceEntityID   (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Descriptive_Metadata","ID"));
-  	   	TS.setServiceAPI        (APIGen.APIs[i]);
-	   	TS.setServiceName       (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Services","Service_"+std::to_string(i+1),"Name"));
-  	   	TS.setServiceType       (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Services","Service_"+std::to_string(i+1),"Type"));
-		TS.setServiceAppCategory(DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Services","Service_"+std::to_string(i+1),"AppCategory"));
-		TS.setServiceDescription(DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Services","Service_"+std::to_string(i+1),"Description"));
-		TS.setServiceKeywords   (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Services","Service_"+std::to_string(i+1),"Keywords"));
-		//TS.displayInfo();
+		for(int i=0;i<num_Services;i++){
+			entityId = i + 1;
+			TService TS;
+		  	TS.setServiceThingID    (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Descriptive_Metadata","Thing_ATID"));
+		  	TS.setServiceSpaceID    (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Descriptive_Metadata","Thing_SSID"));
+		  	TS.setServiceVendor     (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Descriptive_Metadata","Vendor"));
+		  	TS.setServiceEntityID   (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Descriptive_Metadata","ID"));
+		  	TS.setServiceAPI        (APIGen.APIs[i]);
+			TS.setServiceName       (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Services","Service_"+std::to_string(i+1),"Name"));
+		  	TS.setServiceType       (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Services","Service_"+std::to_string(i+1),"Type"));
+			TS.setServiceAppCategory(DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Services","Service_"+std::to_string(i+1),"AppCategory"));
+			TS.setServiceDescription(DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Services","Service_"+std::to_string(i+1),"Description"));
+			TS.setServiceKeywords   (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Services","Service_"+std::to_string(i+1),"Keywords"));
+			//TS.displayInfo();
 
-		string x1 = "\"Tweet Type\" : \"Service\"";
-		string x2 = "\"Name\" : \""		+TS.getServiceName()+"\"";
-		string x3 = "\"Thing ID\" : \""		+TS.getServiceThingID()+"\"";
-		string x4 = "\"Entity ID\" : \""	+TS.getServiceEntityID()+"\"";
-		string x5 = "\"Space ID\" : \""		+TS.getServiceSpaceID()+"\"";
-		string x6 = "\"Vendor\" : \""		+TS.getServiceVendor()+"\"";
-		string x7 = "\"API\" : \""		+TS.getServiceAPI()+"\"";
-		string x8 = "\"Type\" : \""		+TS.getServiceType()+"\"";
-		string x9 = "\"AppCategory\" : \""	+TS.getServiceAppCategory()+"\"";
-		string x10 = "\"Description\" : \""	+TS.getServiceDescription()+"\"";
-		string x11 = "\"Keywords\" : \""	+TS.getServiceKeywords()+"\"";
+				string x1 = "\"Tweet Type\" : \"Service\"";
+				string x2 = "\"Name\" : \""		+TS.getServiceName()+"\"";
+				string x3 = "\"Thing ID\" : \""		+TS.getServiceThingID()+"\"";
+				string x4 = "\"Entity ID\" : \""	+TS.getServiceEntityID()+"\"";
+				string x5 = "\"Space ID\" : \""		+TS.getServiceSpaceID()+"\"";
+				string x6 = "\"Vendor\" : \""		+TS.getServiceVendor()+"\"";
+				string x7 = "\"API\" : \""		+TS.getServiceAPI()+"\"";
+				string x8 = "\"Type\" : \""		+TS.getServiceType()+"\"";
+				string x9 = "\"AppCategory\" : \""	+TS.getServiceAppCategory()+"\"";
+				string x10 = "\"Description\" : \""	+TS.getServiceDescription()+"\"";
+				string x11 = "\"Keywords\" : \""	+TS.getServiceKeywords()+"\"";
 
-		string JSONs = " { " + x1 + "," + x2 + ","+ x3 + ","+ x4 + ","+ x5 + ","+ x6 + ","+ x7 + ","+ x8 + ","+ x9 + ","+ x10 + ","+ x11 + " }";
-		Services_tweets.push_back(JSONs);
-		ThingServices.push_back(TS);
+				string JSONs = " { " + x1 + "," + x2 + ","+ x3 + ","+ x4 + ","+ x5 + ","+ x6 + ","+ x7 + ","+ x8 + ","+ x9 + ","+ x10 + ","+ x11 + " }";
+				Services_tweets.push_back(JSONs);
+				ThingServices.push_back(TS);
 
-		thingLocalGraph.addSPI(&ThingServices[ThingServices.size()-1]);
-     	}
+				thingLocalGraph.addSPI(&ThingServices[ThingServices.size()-1]);
+		}
+	}
+    	
 }
 
 void Knowledge_Tweeting_Manager::parse_mateServicesTweet(string JSONs){
