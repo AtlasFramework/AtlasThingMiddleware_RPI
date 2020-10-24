@@ -102,7 +102,7 @@ void Knowledge_Tweeting_Manager::parse_ThingServices(){
 		num_Services =  atoi(num_of_Services.c_str());
 
 		for(int i=0;i<num_Services;i++){
-			entityId = i + 1;
+			entityId = j + 1;
 			TService TS;
 		  	TS.setServiceThingID    (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Descriptive_Metadata","Thing_ATID"));
 		  	TS.setServiceSpaceID    (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Descriptive_Metadata","Thing_SSID"));
