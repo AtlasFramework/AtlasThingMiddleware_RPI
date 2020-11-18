@@ -72,6 +72,9 @@ class TService;
 
 class TRelation {
 	public:
+	   string thingID;       // the unique ID of the thing
+  	   string spaceID;       // the unique ID of the smart space
+	   
   	   string name;          // given name of the relationship
   	   string owner;         // who established this (vendor/developer or discovered by thing)
   	   string category;      // Cooperative or Competitive
@@ -85,7 +88,9 @@ class TRelation {
   	   TRelation()                                        {SPI1=NULL;   SPI2=NULL;}   
 
 	   //get methods
-  	   string getRelationName()            const {return name;}
+  	   string getRelationThingID()         const {return thingID;}
+  	   string getRelationSpaceID()         const {return spaceID;}
+	   string getRelationName()            const {return name;}
   	   string getRelationVendor()          const {return owner;}
   	   string getRelationCategory()        const {return category;}
   	   string getRelationType()            const {return type;}
@@ -94,6 +99,9 @@ class TRelation {
   	   TService* getSPI2()                 const {return SPI2;}
 
            //set methods
+
+	   void setRelationThingID(string value)     {thingID=value;}
+  	   void setRelationSpaceID(string value)     {spaceID=value;}
   	   void setRelationName(string value)        {name=value;}
   	   void setRelationVendor(string value)      {owner=value;}
   	   void setRelationCategory(string value)    {category=value;}
