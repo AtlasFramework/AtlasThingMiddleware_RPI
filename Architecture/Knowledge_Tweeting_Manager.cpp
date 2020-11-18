@@ -108,12 +108,74 @@ void Knowledge_Tweeting_Manager::parse_ThingServices(){
 		  	TS.setServiceSpaceID    (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Descriptive_Metadata","Thing_SSID"));
 		  	TS.setServiceVendor     (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Descriptive_Metadata","Vendor"));
 		  	TS.setServiceEntityID   (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Descriptive_Metadata","ID"));
-		  	TS.setServiceAPI        (APIGen.APIs[i]);
+		  	//TS.setServiceAPI        (APIGen.APIs[i]);
+
+
 			TS.setServiceName       (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Services","Service_"+std::to_string(i+1),"Name"));
 		  	TS.setServiceType       (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Services","Service_"+std::to_string(i+1),"Type"));
 			TS.setServiceAppCategory(DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Services","Service_"+std::to_string(i+1),"AppCategory"));
 			TS.setServiceDescription(DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Services","Service_"+std::to_string(i+1),"Description"));
 			TS.setServiceKeywords   (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(entityId),"Services","Service_"+std::to_string(i+1),"Keywords"));
+			
+
+
+			//======== API for service
+
+			int Service_Number = i;
+			string Service_Name              = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j+1),"Services","Service_"+std::to_string(i+1),"Name");
+
+			string Service_InputTypes        = "NULL";
+			string Service_InputDescription  = "NULL";
+			string Service_InputRange        = "NULL";
+		    	int num_Inputs = 0;
+		    	string num_of_Inputs = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j+1),"Services","Service_"+std::to_string(i+1),"Service_NumberInputs");
+		    	num_Inputs =  atoi(num_of_Inputs.c_str());
+
+			if(num_Inputs > 0){
+			      Service_InputTypes        = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j+1),"Services","Service_"+std::to_string(i+1),"Service_InputTypes");
+			      Service_InputDescription  = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j+1),"Services","Service_"+std::to_string(i+1),"Service_InputDescriptions");
+			      //Service_InputRange      = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j+1),"Services","Service_"+std::to_string(i+1),"Service_InputRange");
+			}
+		
+			string Service_OutputTypes       = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j+1),"Services","Service_"+std::to_string(i+1),"OutputType");
+			string API_Input = "NULL";
+			string API_Output = "NULL";
+
+			if(Service_InputTypes.compare("NULL") !=0){
+			      	vector<string> types;
+			      	vector<string> description;
+			      	//vector<string> Range;
+			      	string s;
+			      	istringstream f(Service_InputTypes);
+			      	istringstream d(Service_InputDescription);
+			      	//istringstream r(Service_InputRange);
+			     	while(getline(f,s,','))  types.push_back(s);
+			     	while(getline(d,s,','))  description.push_back(s);
+			     	//while(getline(r,s,','))  Range.push_back(s);
+				int number_Inputs=description.size();
+				API_Input = description[0]+","+types[0]+", NULL"; //+Range[0];
+
+				for(int i=1;i<description.size();i++)
+					API_Input = API_Input +"|" +description[i]+","+types[i]+", NULL"; //+Range[i];
+			}
+
+			if(Service_OutputTypes.compare("void") !=0) {
+				string Service_OutputDescription = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j+1),"Services","Service_"+std::to_string(i+1),"OutputDescription");
+				//string Service_OutputRange     = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entity_"+std::to_string(num_Entities),"Resource_Service","Service_"+std::to_string(i+1),"OutputRange");
+							
+				API_Output = Service_OutputDescription+","+Service_OutputTypes+", NULL"; //+Service_OutputRange;
+			}
+	
+			string Generated_API = Service_Name+":["+API_Input+"]:("+API_Output+")";
+			
+			TS.setServiceAPI        (Generated_API);
+
+			//=======================
+
+
+
+
+
 			//TS.displayInfo();
 
 				string x1 = "\"Tweet Type\" : \"Service\"";
@@ -226,6 +288,9 @@ void Knowledge_Tweeting_Manager::parse_ThingRelationships(){
 
 	    	for(int i=1;i<=num_relations;i++){
 			TRelation TR;
+
+			TR.setRelationThingID    (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Descriptive_Metadata","Thing_ATID"));
+			TR.setRelationSpaceID    (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Descriptive_Metadata","Thing_SSID"));
 	  	   	TR.setRelationName       (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Relationships","Relationship_"+std::to_string(i),"Name"));
 	  	   	TR.setRelationType       (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Relationships","Relationship_"+std::to_string(i),"type"));
 	  	   	TR.setRelationCategory   ("Cooperative");
@@ -233,10 +298,9 @@ void Knowledge_Tweeting_Manager::parse_ThingRelationships(){
 	  	   	TR.setRelationVendor     (DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Relationships","Relationship_"+std::to_string(i),"Establisher"));
 	  	   	TR.setRelationDescription(DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Relationships","Relationship_"+std::to_string(i),"Description"));
 	  	   	
-
-
-
 			string x1 = "\"Tweet Type\" : \"Relationship\"";
+			string x9 = "\"Thing ID\" : \""		+TR.getRelationThingID()+"\"";
+			string x10 = "\"Space ID\" : \""		+TR.getRelationSpaceID()+"\"";			
 			string x2 = "\"Name\" : \""+TR.getRelationName()+"\"";
 			string x3 = "\"Owner\" : \""+TR.getRelationVendor()+"\"";
 			string x4 = "\"Category\" : \""+TR.getRelationCategory()+"\"";
@@ -245,7 +309,7 @@ void Knowledge_Tweeting_Manager::parse_ThingRelationships(){
 			string x7 = "\"FS name\" : \""+DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Relationships","Relationship_"+std::to_string(i),"Input1")+"\"";
 			string x8 = "\"SS name\" : \""+DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Entities","Entity_"+std::to_string(j),"Relationships","Relationship_"+std::to_string(i),"Input2")+"\"";
 					
-			string JSONs = " { " + x1 + "," + x2 + ","+ x3 + ","+ x4 + ","+ x5 + ","+ x6 + ","+ x7 + "," + x8 + " }";
+			string JSONs = " { " + x1 + "," + x9 + "," + x10 + "," + x2 + ","+ x3 + ","+ x4 + ","+ x5 + ","+ x6 + ","+ x7 + "," + x8 + " }";
 			cout<<"new full relation added"<<endl;
 			Relationships_tweets.push_back(JSONs);
 			ThingRelationships.push_back(TR);
