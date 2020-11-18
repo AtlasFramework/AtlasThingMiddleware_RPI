@@ -50,33 +50,33 @@ Communication_Manager::Communication_Manager(){
 	
 
 	IDP.parse_ThingIdentity();	
-	cout<<"\n\n ... the generated Thing Identity-related Tweets:"<<endl; 
+	cout<<"\n\n\n\n ... the generated Thing Identity-related Tweets:"<<endl; 		
 	for(int i=0;i<IDP.ThingIdentity_tweets.size();	i++)   	
-		{thingTweets.push_back(IDP.ThingIdentity_tweets[i]); 	cout<<IDP.ThingIdentity_tweets[i]<<endl;}
+		{thingTweets.push_back(IDP.ThingIdentity_tweets[i]); 	cout<<IDP.ThingIdentity_tweets[i]<<endl; cout<<"\n\n"<<endl;}
 	
 	IDP.parse_ThingLanguages();
-	cout<<"\n\n ... the generated Thing Languages-related Tweets:"<<endl; 
+	cout<<"\n\n\n\n ... the generated Thing Languages-related Tweets:"<<endl; 
      	for(int i=0;i<IDP.ThingLanguages_tweets.size();	i++)  	
-		{thingTweets.push_back(IDP.ThingLanguages_tweets[i]); 	cout<<IDP.ThingLanguages_tweets[i]<<endl;}
+		{thingTweets.push_back(IDP.ThingLanguages_tweets[i]); 	cout<<IDP.ThingLanguages_tweets[i]<<endl; cout<<"\n\n"<<endl;}
 
 	IDP.parse_EntityIdentity();
-	cout<<"\n\n ... the generated Entity Identity-related Tweets:"<<endl; 
+	cout<<"\n\n\n\n ... the generated Entity Identity-related Tweets:"<<endl; 
      	for(int i=0;i<IDP.EntityIdentity_tweets.size();	i++)  	
-		{thingTweets.push_back(IDP.EntityIdentity_tweets[i]); 	cout<<IDP.EntityIdentity_tweets[i]<<endl;}
+		{thingTweets.push_back(IDP.EntityIdentity_tweets[i]); 	cout<<IDP.EntityIdentity_tweets[i]<<endl; cout<<"\n\n"<<endl;}
 	
 	KTM.parse_ThingServices();
-	cout<<"\n\n ... the generated Services-related Tweets:"<<endl; 
+	cout<<"\n\n\n\n ... the generated Services-related Tweets:"<<endl; 
 	for(int i=0;i<KTM.Services_tweets.size(); i++)    
-		{thingTweets.push_back(KTM.Services_tweets[i]); 	cout<<KTM.Services_tweets[i]<<endl; }
+		{thingTweets.push_back(KTM.Services_tweets[i]); 	cout<<KTM.Services_tweets[i]<<endl; cout<<"\n\n"<<endl;}
  	    
 	KTM.parse_ThingRelationships();	
-	cout<<"\n\n ... the generated Relationship-related Tweets:"<<endl; 
+	cout<<"\n\n\n\n ... the generated Relationship-related Tweets:"<<endl; 
 	for(int i=0;i<KTM.Relationships_tweets.size(); i++)   	
-		{thingTweets.push_back(KTM.Relationships_tweets[i]); 	cout<<KTM.Relationships_tweets[i]<<endl; }
+		{thingTweets.push_back(KTM.Relationships_tweets[i]); 	cout<<KTM.Relationships_tweets[i]<<endl; cout<<"\n\n"<<endl;}
      	
 
 
-	cout<<"\nInitializing the interface and communication engine ................"<<endl;
+	cout<<"\n\n\n\n\nInitializing the interface and communication engine ................"<<endl;
 
 	//Socket attributes, common properties for all Atlas things
     	MulticastPort 	= 1235;                      //port the multicast socket is listening to/sending on
@@ -111,7 +111,7 @@ Communication_Manager::Communication_Manager(){
 
 void Communication_Manager::BroadcastTweets_IPSocket(){
      	
-	cout<<"Your Atlas thing started to announce the tweets to the smart space through IP Socket multicasting ...."<<endl;
+	cout<<"\n\n\nYour Atlas thing started to announce the tweets to the smart space through IP Socket multicasting ...."<<endl;
 
      	struct sockaddr_in addr;
      	int i=0, fd, cnt;
@@ -125,9 +125,10 @@ void Communication_Manager::BroadcastTweets_IPSocket(){
      	addr.sin_port        =	htons(MulticastPort);
 
      	while (1) {
-	  	char tabx[1024];
+	  	char tabx[4048];
 	  	strcpy(tabx, thingTweets[i].c_str());
-          	cout<<"Announcing tweet: "<<tabx<<endl;
+          	cout<<"\n\nAnnouncing tweet: "<<tabx<<endl;
+          	cout<<"\n\n"<<endl;
 	  	if (sendto(fd,tabx,thingTweets[i].length(),0,(struct sockaddr *) &addr,sizeof(addr)) < 0) 
 			{cout<<"ERROR writing to socket"<<endl;  continue; }
 	  	
@@ -138,7 +139,6 @@ void Communication_Manager::BroadcastTweets_IPSocket(){
           		cout<<"All tweets have been announced, after 20 seconds they will be announced again"<<endl;
 			wait(20);      //wait for 20 seconds to start the cycle again 
 		} 
-
      	}
 }
 
