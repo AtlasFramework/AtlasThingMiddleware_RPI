@@ -62,7 +62,7 @@ void Identity_Parser::parse_ThingLanguages(){
 	std::size_t found=0;
 	found = temp.find("Ethernet");
 	if (found!=std::string::npos) strncpy(ifr.ifr_name, "eth0", IFNAMSIZ-1);
-	else                          strncpy(ifr.ifr_name, "wlan0", IFNAMSIZ-1);
+	else                          strncpy(ifr.ifr_name, "tap0", IFNAMSIZ-1);
 
 
  	ioctl(fd, SIOCGIFADDR, &ifr);
