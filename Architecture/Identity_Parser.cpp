@@ -53,13 +53,23 @@ void Identity_Parser::parse_ThingLanguages(){
      	struct ifreq ifr;
  	int fd = socket(AF_INET, SOCK_DGRAM, 0);
  	ifr.ifr_addr.sa_family = AF_INET;
- 	strncpy(ifr.ifr_name, "eth0", IFNAMSIZ-1);
+
+	IoTDDL_Parser DDLM;
+
+
+	string temp = DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Administrative_Metadata","Network_Manager","Module");
+     	
+	std::size_t found=0;
+	found = temp.find("Ethernet");
+	if (found!=std::string::npos) strncpy(ifr.ifr_name, "eth0", IFNAMSIZ-1);
+	else                          strncpy(ifr.ifr_name, "wlan0", IFNAMSIZ-1);
+
+
  	ioctl(fd, SIOCGIFADDR, &ifr);
  	close(fd);
 	char *listenAddressString = inet_ntoa(((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr);
 
 
-	IoTDDL_Parser DDLM;
      	selfInfo_language.thingID                       = 
 		DDLM.parseXMLTag("Atlas_IoTDDL","Atlas_Thing","Descriptive_Metadata","Thing_ATID");
      	selfInfo_language.smartspaceID                  = 
