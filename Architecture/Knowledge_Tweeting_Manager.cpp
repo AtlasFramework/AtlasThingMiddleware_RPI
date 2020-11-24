@@ -414,7 +414,13 @@ void Knowledge_Tweeting_Manager::parse_mateRelationsTweet(string JSONs){
 	assert(document.IsObject());
 	assert(document["Thing ID"].IsString());
 	printf("ThingID = %s \n", document["Thing ID"].GetString());
-	string name 		= document["Name"].GetString();
+	
+
+
+
+/*
+
+string name 		= document["Name"].GetString();
 	string firstSName 	= document["FS name"].GetString();
         string SecondSName 	= document["SS name"].GetString();
 	string firstSID 	= document["FS tID"].GetString();
@@ -456,6 +462,7 @@ void Knowledge_Tweeting_Manager::parse_mateRelationsTweet(string JSONs){
 	cout<<"this relation "+name+ " between " + firstSName+ " and "+SecondSName +" already in the network"<<endl;
         ThingRelationships.push_back(TR);
 	//thingLocalGraph.addSPI_Link(*TR);
+*/
 }
 
 
