@@ -98,6 +98,21 @@ API_Generator::API_Generator(){
     	APIs.clear();
 }
 
+string escape(string str) {
+	string s;
+	for(size_t i = 0; i != str.size(); i++) {
+		char c = str[i];
+		if (c == '\\') {
+			s += "\\\\";
+		} else if (c == '"') {
+			s += "\\\"";
+		} else {
+			s += c;
+		}
+	}
+	return s;
+}
+
 void API_Generator::Generate_ServicesBundles(){
 
 	IoTDDL_Parser DDLM;
@@ -257,7 +272,7 @@ void API_Generator::Generate_ServicesBundles(){
 	  				std::size_t foundy = line.find(")");
 	  				if (foundx!=std::string::npos){
 						std::string value = line.substr(foundx+1, foundy-foundx-1);
-						instruction = "std::cout << " + value + " << std::endl;";
+						instruction = "std::cout << " + escape(value) + " << std::endl;";
 						def << "source = \"" << instruction << "\";" << std::endl;
 					}
 					continue;
@@ -269,7 +284,7 @@ void API_Generator::Generate_ServicesBundles(){
 	  				std::size_t foundy = line.find(")");
 	  				if (foundx!=std::string::npos){
 						std::string value = line.substr(foundx+1, foundy-foundx-1);
-						instruction = "std::cout << " + value + " << std::endl;";
+						instruction = "std::cout << " + escape(value) + " << std::endl;";
 						def << "source = \"" << instruction << "\";" << std::endl;
 					}
 					continue;
@@ -334,50 +349,7 @@ void API_Generator::Generate_ServicesBundles(){
 
 
 
-				found = line.find("}");
-				if (found!=std::string::npos){
-	  				instruction = line;
-					def << "source = \"" << instruction << "\";" << std::endl;
-					continue;
-				}
-				found = line.find("{");
-				if (found!=std::string::npos){
-	  				instruction = line;
-					def << "source = \"" << instruction << "\";" << std::endl;
-					continue;
-				}
-				found = line.find("while(");
-				if (found!=std::string::npos){
-	  				instruction = line;
-					def << "source = \"" << instruction << "\";" << std::endl;
-					continue;
-				}
-				found = line.find("for(");
-				if (found!=std::string::npos){
-	  				instruction = line;
-					def << "source = \"" << instruction << "\";" << std::endl;
-					continue;
-				}
-				found = line.find("if(");
-				if (found!=std::string::npos){
-	  				instruction = line;
-					def << "source = \"" << instruction << "\";" << std::endl;
-					continue;
-				}
-				found = line.find("else if(");
-				if (found!=std::string::npos){
-	  				instruction = line;
-					def << "source = \"" << instruction << "\";" << std::endl;
-					continue;
-				}
-				found = line.find("else");
-				if (found!=std::string::npos){
-	  				instruction = line;
-					def << "source = \"" << instruction << "\";" << std::endl;
-					continue;
-				}
-
-				instruction = line;
+				instruction = escape(line);
 				def << "source = \"" << instruction << "\";" << std::endl;
 			}
 
